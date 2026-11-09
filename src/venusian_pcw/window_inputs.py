@@ -29,6 +29,8 @@ def materialize(stage, role, day=None):
     stem = f"{stage}_{role}" if stage else "fixed_test"
     manifest = INPUTS / "window_lists" / f"{stem}.csv.gz"
     frame = pd.read_csv(manifest, float_precision="round_trip")
+    frame["y"] = frame.source.eq("P").astype(np.float32)
+    frame["w"] = 1 / frame.groupby(["source", "group"]).source.transform("size")
     starts = pd.to_datetime(frame.win_start, unit="ns", utc=True)
     if day:
         keep = starts.dt.strftime("%Y-%m-%d").eq(day)

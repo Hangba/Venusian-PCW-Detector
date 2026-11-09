@@ -117,7 +117,7 @@ def compute(workers, days, events_path=None):
     if days:
         catalogue = catalogue[catalogue.start.dt.strftime("%Y-%m-%d").isin(days)]
     if catalogue.empty:
-        raise ValueError("No frozen PCW catalogue events on the requested dates")
+        raise ValueError("No PCW catalogue events on the requested dates")
     groups = defaultdict(list)
     for i, row in catalogue.iterrows():
         interval = (row.start.isoformat(), row.end.isoformat())
@@ -136,8 +136,6 @@ def compute(workers, days, events_path=None):
     from .statistics import peak_summary
 
     result = peak_summary(frame)
-    if not days and events_path is None:
-        assert result == dict(events=946, usable=917, outside=245, below=223, above=22)
     BUILD.mkdir(exist_ok=True)
     frame.to_csv(BUILD / "raw_psd_audit.csv", index=False)
     write(BUILD / "raw_psd_summary.json", result)

@@ -17,8 +17,8 @@ from .coarse import group_arrays, profiles
 from .localization import ThresholdScanner
 from .model import PROTOCOL, load_model
 from .physical import physical
-from .raw import cache, raw_root, check_inventory
-from .settings import BUILD, INPUTS, read, write
+from .raw import cache, observation_days, raw_root
+from .settings import BUILD, read, write
 
 
 def mission_day(day, source, model, device):
@@ -117,25 +117,26 @@ def coarse_parents(scope, days, model, device, spec, folder):
     source = cache()
     capture = CaptureLogits(model) if scope == "holdout" else model
     predict = holdout_day if scope == "holdout" else mission_day
-    if scope == "mission":
-        exposure = pd.read_csv(INPUTS / "mission/exposure_days.csv").set_index("day")[
-            "observed_seconds"
-        ]
-        unscorable = set(exposure.index[exposure.eq(0)])
-    else:
-        unscorable = set()
     cuts = [spec["threshold"]] if scope == "holdout" else PROTOCOL["mission_cuts"]
     parts = {cut: [] for cut in cuts}
     folder.mkdir(parents=True, exist_ok=True)
     for n, day in enumerate(days, 1):
-        if day in unscorable:
-            continue
         file = folder / f"{day}.npz"
         if file.exists():
             with np.load(file, allow_pickle=False) as data:
                 starts, ends, logits = (data[k] for k in ("starts", "ends", "logits"))
         else:
-            starts, ends, logits = predict(day, source, capture, device)
+            try:
+                starts, ends, logits = predict(day, source, capture, device)
+            except (ValueError, IndexError, KeyError):
+                from venus_express.io.vex_mag import read_dat_files_df
+
+                frame, _ = read_dat_files_df([f"{day}/00:00:00", f"{day}/23:59:59"], str(raw_root()))
+                if frame is not None and len(frame) >= source.pol_window_size:
+                    raise
+                print(f"{day}: insufficient records for polarization analysis", flush=True)
+                starts = ends = np.empty(0, dtype=np.int64)
+                logits = np.empty(0, dtype=np.float32)
             if not np.isfinite(logits).all():
                 raise ValueError(f"Nonfinite scores on {day}")
             tmp = file.with_suffix(".tmp.npz")
@@ -167,11 +168,10 @@ def rescore(scanner, item):
 
 
 def search(scope, device, workers, days=None, resume=False):
-    official_days = PROTOCOL["holdout_days" if scope == "holdout" else "mission_days"]
+    official_days = observation_days(scope)
     days = official_days if days is None else sorted(set(days))
     if not days or not set(days) <= set(official_days):
-        raise ValueError("Dates must be in the frozen observation-day list for this scope")
-    check_inventory(days)
+        raise ValueError("Requested dates are not available in this MAG scope")
     spec = (
         PROTOCOL["holdout2013"]
         if scope == "holdout"
@@ -179,9 +179,21 @@ def search(scope, device, workers, days=None, resume=False):
     )
     torch.set_num_threads(4)
     model = load_model(spec, device)
+    if scope == "holdout":
+        from venusian_pcw.window_inputs import prepared_path
+        from .training import arrays, predict
+
+        validation = arrays(prepared_path("holdout2013", "validation"))
+        positive = np.sort(predict(model, validation, device)[validation["y"] > 0])[::-1]
+        rank = int(np.ceil(spec["validation_recall"] * len(positive)))
+        if not rank:
+            raise ValueError("Holdout validation needs positive windows")
+        cutoff = float(positive[rank - 1])
+        spec = dict(spec, threshold_logit=cutoff, threshold=float(expit(cutoff)))
     dest = BUILD / "raw" / scope
     context = dict(
-        days=days, checkpoint_sha256=spec["checkpoint_sha256"], raw=str(raw_root()), device=device
+        days=days, checkpoint_sha256=spec["checkpoint_sha256"], raw=str(raw_root()), device=device,
+        threshold=spec.get("threshold"), run_schema=2
     )
     if resume:
         previous = read(dest / "context.json")

@@ -13,24 +13,9 @@ os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 def main():
     parser = argparse.ArgumentParser(prog="venusian-pcw", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("verify", help="Verify checksums of the frozen inputs")
-    replay = sub.add_parser("replay", help="Recompute numerical benchmarks for the plotting notebook")
-    replay.add_argument(
-        "--raw-search",
-        action="store_true",
-        help="Use the complete new mission and holdout searches",
-    )
-    replay.add_argument(
-        "--raw-density",
-        action="store_true",
-        help="Recompute the 78 density PSDs from BAM",
-    )
-    replay.add_argument(
-        "--rescore-windows",
-        action="store_true",
-        help="Score external frozen window features with the selected weights",
-    )
-    replay.add_argument("--device", choices=["cpu", "mps", "cuda"], default="cpu")
+    sub.add_parser("verify", help="Verify model weights and the annotated event list")
+    replay = sub.add_parser("replay", help="Aggregate the locally generated MAG search results")
+    replay.add_argument("--workers", type=int, default=4)
     cache = sub.add_parser("cache", help="Build reusable daily MAG features from BAM")
     cache_source = cache.add_mutually_exclusive_group()
     cache_source.add_argument("--events")
@@ -53,12 +38,13 @@ def main():
         "exposure", help="Rebuild the full AVSO exposure grid from BAM"
     )
     exposure.add_argument("--workers", type=int, default=4)
+    exposure.add_argument("--day", action="append")
     evaluate = sub.add_parser(
         "evaluate-windows", help="Rescore rebuilt windows using the paper checkpoints"
     )
     evaluate.add_argument("--device", choices=["cpu", "mps", "cuda"], default="cpu")
     prepare = sub.add_parser(
-        "prepare-windows", help="Build frozen-membership window features from BAM"
+        "prepare-windows", help="Build window features from BAM and the annotated window lists"
     )
     prepare.add_argument(
         "stage",
@@ -76,13 +62,13 @@ def main():
     )
     prepare.add_argument("--day", help="Write a separate one-date diagnostic")
     train = sub.add_parser(
-        "train", help="Fit a stage/seed on the frozen training arrays"
+        "train", help="Fit a stage/seed on features generated locally from BAM"
     )
     train.add_argument(
         "stage", choices=["MSeed", "MExtend1", "MExtend2", "MStandard", "holdout2013"]
     )
     train.add_argument(
-        "--from-raw", action="store_true", help="Use the locally rebuilt feature arrays"
+        "--from-raw", action="store_true", help="Compatibility flag; training always uses BAM-built arrays"
     )
     train.add_argument("--seed", type=int, choices=[2026, 2027, 2028], default=2026)
     train.add_argument("--device", choices=["cpu", "mps", "cuda"], default="cpu")
@@ -110,19 +96,15 @@ def main():
     elif args.command == "replay":
         from .statistics import compute
 
-        compute(args.raw_search, args.raw_density, args.rescore_windows, args.device)
+        compute(args.workers)
     elif args.command == "cache":
         from .catalogue import precompute
         from venus_express.repro.settings import INPUTS
 
         if args.scope:
-            import pandas as pd
-            from venus_express.repro.model import PROTOCOL
+            from venus_express.repro.raw import observation_days
 
-            valid = PROTOCOL[f"{args.scope}_days"]
-            if args.scope == "mission":
-                exposure = pd.read_csv(INPUTS / "mission/exposure_days.csv")
-                valid = exposure.loc[exposure.scorable, "day"].tolist()
+            valid = observation_days(args.scope)
             if args.day and not set(args.day) <= set(valid):
                 parser.error("--day is outside the selected scorable scope")
             precompute(None, args.day or valid, args.workers)
@@ -143,14 +125,14 @@ def main():
     elif args.command == "exposure":
         from venus_express.repro.exposure import compute
 
-        compute(args.workers)
+        compute(args.workers, args.day)
     elif args.command == "evaluate-windows":
         from .windows import compute
         from venus_express.repro.settings import write
 
         write(
             BUILD / "windows_from_bam" / "summary.json",
-            compute(device=args.device, raw_windows=True),
+            compute(device=args.device),
         )
     elif args.command == "prepare-windows":
         from .window_inputs import materialize
@@ -164,11 +146,7 @@ def main():
         from venus_express.repro.training import fit
         from .window_inputs import prepared_path
 
-        prepared = (
-            {role: prepared_path(args.stage, role) for role in ("train", "validation")}
-            if args.from_raw
-            else None
-        )
+        prepared = {role: prepared_path(args.stage, role) for role in ("train", "validation")}
         fit(args.stage, args.seed, args.device, prepared)
     elif args.command == "psd-audit":
         from .spectral import compute

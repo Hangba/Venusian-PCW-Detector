@@ -1,13 +1,8 @@
 """Reconstruct the paper continuum subtraction from native FAC magnetic data."""
 
 import numpy as np
-import pandas as pd
 from scipy.optimize import least_squares
 
-from venus_express.sample_analysis.calculations.paper_integrated_density import (
-    paper_perpendicular_psd,
-    _resample_uniform_cadence,
-)
 
 
 def background(freq, psd, lo, hi):
@@ -67,26 +62,3 @@ def background(freq, psd, lo, hi):
         fit_cost=float(result.cost),
         one_sided=not (left.sum() and right.sum()),
     )
-
-
-def pickup_density(source, row):
-    trange = [pd.Timestamp(value).strftime("%Y-%m-%d/%H:%M:%S") for value in (row.start, row.end)]
-    features = source.load_features_for_trange(trange)
-    times = features["times_s"]
-    components = tuple(
-        np.asarray(features[key], float) for key in ("bfac_x", "bfac_y", "fcp_curve")
-    )
-    if not np.allclose(np.diff(times), 1.0, rtol=0, atol=0.02):
-        _, components, _ = _resample_uniform_cadence(times, components, fs_hz=1.0)
-    freq, psd, _ = paper_perpendicular_psd(components[0], components[1])
-    lo, hi = row.paper_band_low_hz, row.paper_band_high_hz
-    mask = (freq >= lo) & (freq <= hi) & (freq > 0)
-    df = freq[1] - freq[0]
-    raw_power = psd[mask].sum() * df
-    np.testing.assert_allclose(raw_power, row.paper_integrated_psd_nT2_before_background, rtol=1e-7)
-    assert mask.sum() == row.paper_band_bin_count
-    continuum, details = background(freq, psd, lo, hi)
-    if continuum is None:
-        raise ValueError(f"Cannot fit continuum for {row.start}: {details}")
-    retained_fraction = float(np.sum(psd[mask] - continuum[mask]) * df / raw_power)
-    return row.n_Hplus_pickup_cm3_before_background * max(0.0, retained_fraction)

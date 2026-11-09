@@ -56,12 +56,3 @@ def checked_file(path, digest):
     if sha256(path) != digest:
         raise ValueError(f"File differs from the frozen paper input: {path}")
     return path
-
-
-def training_file(spec):
-    source = os.environ.get("VENUS_EXPRESS_TRAINING_INPUT_DIR")
-    if not source:
-        raise ValueError(
-            "Set VENUS_EXPRESS_TRAINING_INPUT_DIR to the root of the frozen training inputs"
-        )
-    return checked_file(Path(source).expanduser() / spec["path"], spec["sha256"])

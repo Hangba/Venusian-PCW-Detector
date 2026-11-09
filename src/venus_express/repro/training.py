@@ -11,8 +11,8 @@ from scipy.special import expit
 
 from venus_express.icw_training import weighted_bce_loss
 
-from .model import PROTOCOL, build_model
-from .settings import BUILD, training_file, write
+from .model import build_model
+from .settings import BUILD, write
 
 MASS = {
     "MSeed": {"P": 0.4, "bg": 0.6},
@@ -21,8 +21,7 @@ MASS = {
 }
 
 
-def arrays(spec, prepared_path=None):
-    path = training_file(spec) if prepared_path is None else prepared_path
+def arrays(path):
     with np.load(path, allow_pickle=False) as z:
         result = dict(z)
     if "class_source" not in result:
@@ -109,14 +108,10 @@ def validation_metrics(data, z):
     )
 
 
-def fit(stage, seed, device, prepared=None):
+def fit(stage, seed, device, prepared):
     if stage == "holdout2013" and seed != 2026:
         raise ValueError("The 2013 holdout fit uses seed 2026")
-    roles = PROTOCOL["training"][stage]
-    train, validation = [
-        arrays(roles[role], prepared[role] if prepared else None)
-        for role in ("train", "validation")
-    ]
+    train, validation = [arrays(prepared[role]) for role in ("train", "validation")]
     assert "F" not in validation["class_source"]
     is_standard = stage in {"MStandard", "holdout2013"}
     is_f = train["class_source"] == "F"
@@ -130,7 +125,7 @@ def fit(stage, seed, device, prepared=None):
     torch.manual_seed(seed)
     torch.set_num_threads(4)
     model = build_model().to(device)
-    output = BUILD / ("training_from_bam" if prepared else "training") / stage / f"seed{seed}"
+    output = BUILD / "training_from_bam" / stage / f"seed{seed}"
     output.mkdir(parents=True, exist_ok=False)
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003, weight_decay=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100)

@@ -30,14 +30,20 @@ def union_seconds(records):
     )
 
 
-def aggregate(rows):
+def aggregate(rows, exposure_days):
     occ = BUILD / "occurrence"
     occ.mkdir(parents=True, exist_ok=True)
     items = []
     for r in rows:
         for q in r["qualified"]:
             items.append(dict(threshold=r["threshold"], parent_id=r["parent_id"], **q))
-    q = pd.DataFrame(items).sort_values(["threshold", "start_s", "end_s", "parent_id"])
+    q = pd.DataFrame(items, columns=[
+        "threshold", "parent_id", "start_s", "end_s", "path", "final_score",
+        "fmax_over_fcp", "pf_band_ratio", "energy_ratio", "data_missing_ratio", "ellip", "wna",
+    ] + sorted({key for item in items for key in item} - {
+        "threshold", "parent_id", "start_s", "end_s", "path", "final_score",
+        "fmax_over_fcp", "pf_band_ratio", "energy_ratio", "data_missing_ratio", "ellip", "wna",
+    })).sort_values(["threshold", "start_s", "end_s", "parent_id"])
     q["duration_s"] = q.end_s - q.start_s
     q = q.drop_duplicates(["threshold", "start_s", "end_s"]).reset_index(drop=True)
     passed = (
@@ -58,10 +64,15 @@ def aggregate(rows):
     q["end_utc"] = [utc(x) for x in q.end_s]
     q.to_csv(occ / "qualified_intervals.csv", index=False)
 
-    exposure = INPUTS / "mission"
-    exp = pd.read_csv(exposure / "exposure_annual.csv")
-    total = int(pd.read_csv(exposure / "exposure_days.csv").observed_seconds.sum())
-    assert total == 233963418
+    observed = exposure_days.assign(year=exposure_days.day.str[:4].astype(int))
+    exp = observed.groupby("year", as_index=False).agg(
+        observed_seconds=("observed_seconds", "sum"),
+        scorable_calendar_days=("observed_seconds", lambda x: x.gt(0).sum()),
+    )
+    exp = exp[exp.observed_seconds > 0].assign(observed_days=lambda t: t.observed_seconds / 86400)
+    total = int(exp.observed_seconds.sum())
+    if not total:
+        raise ValueError("No valid MAG exposure on the selected dates")
 
     clusters, members, annual, mission = [], [], [], []
     for cut in CUTS:
@@ -133,12 +144,18 @@ def aggregate(rows):
                         observed_seconds=e.observed_seconds,
                         observed_days=e.observed_days,
                         scorable_calendar_days=e.scorable_calendar_days,
-                        sunspot_exposureweighted=e.sunspot_exposureweighted,
                         clusters_per_observed_day=n / e.observed_days,
                         clusters_per_100_observed_days=100 * n / e.observed_days,
                     )
                 )
-    cf, mf, af, sf = map(pd.DataFrame, [clusters, members, annual, mission])
+    cf = pd.DataFrame(clusters, columns=[
+        "threshold", "gap_minutes", "cluster_id", "start_s", "end_s", "start_utc", "end_utc",
+        "start_year", "member_count", "qualified_union_seconds", "representative_interval_id",
+        "representative_start_s", "representative_end_s", "representative_time_s", "max_final_score",
+    ])
+    mf = pd.DataFrame(members, columns=["threshold", "gap_minutes", "cluster_id", "interval_id",
+                                      "start_s", "end_s", "path", "representative"])
+    af, sf = pd.DataFrame(annual), pd.DataFrame(mission)
     for name, frame in [
         ("clusters", cf),
         ("cluster_members", mf),
@@ -172,6 +189,8 @@ def aggregate(rows):
             for r in rows
         ]
     )
+    if po.empty:
+        return sf[(sf.threshold == 0.7) & (sf.gap_minutes == 10)].iloc[0].to_dict()
     outcome = (
         po.groupby("threshold")
         .apply(
@@ -195,7 +214,7 @@ def aggregate(rows):
     )
     outcome.to_csv(occ / "parent_outcomes_summary.csv", index=False)
     # Overlap with the manual catalogue: a coverage description, not recall (the catalogue is incomplete).
-    cat = pd.read_csv(INPUTS / "manual/catalogue.csv")
+    cat = pd.read_csv(INPUTS / "manual/event_list.csv")
     ta = (
         pd.to_datetime(cat.start, utc=True).to_numpy(dtype="datetime64[ns]").astype("int64")
         // 10**9

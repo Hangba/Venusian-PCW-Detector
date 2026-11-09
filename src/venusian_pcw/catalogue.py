@@ -244,20 +244,17 @@ def compute(path, days, workers):
     if len(density) >= 3:
         from venus_express.repro.density import fit_with_bootstrap
 
-        if event_list_sha == sha256(INPUTS / "manual/event_list.csv"):
-            # Restore the paper's seed-to-day mapping without using any frozen densities.
-            day_order = pd.read_csv(INPUTS / "manual/density_bootstrap_days.csv")["day"]
-            density = density.sort_values(
-                "day",
-                kind="stable",
-                key=lambda values: pd.Categorical(values, categories=day_order, ordered=True),
-            )
         summary["density"] = fit_with_bootstrap(density, dest / "density")
     if len(selected) >= 15 and set(selected.year) == set(range(2006, 2015)):
         from .energy import compute as annual_energy
 
-        solar = pd.read_csv(INPUTS / "silso.csv", sep=";", header=None, usecols=[0, 1])
-        sun = solar[solar[0].astype(int).between(2006, 2014)].sort_values(0)[1].to_numpy()
-        summary["wave_energy"] = annual_energy(sun, events=selected, output=dest / "energy")
+        from .solar import annual_sunspots
+
+        solar = annual_sunspots()
+        sun = None
+        annual = solar.set_index("year").reindex(range(2006, 2015))
+        if annual.sunspot_number.notna().all():
+            sun = annual.sunspot_number.to_numpy()
+        summary["wave_energy"] = annual_energy(selected, dest / "energy", sun=sun)
     write(dest / "summary.json", summary)
     print(summary)

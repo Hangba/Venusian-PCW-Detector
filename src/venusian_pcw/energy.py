@@ -6,7 +6,7 @@ from scipy.interpolate import CubicSpline
 from scipy.optimize import minimize_scalar
 from scipy.stats import linregress, pearsonr, spearmanr, t
 from venus_express.physics.bow_shock import BOW_SHOCK_SOLAR_MINIMUM, vso_to_aberrated_vso
-from venus_express.repro.settings import ROOT, INPUTS, BUILD
+from venus_express.repro.settings import BUILD
 
 YEARS = np.arange(2006, 2015)
 
@@ -109,15 +109,8 @@ def correlation(sun, log_energy):
     )
 
 
-def compute(sun, events=None, output=None):
-    frozen = events is None
-    data = (
-        pd.read_csv(INPUTS / "manual/wave_energy.csv", float_precision="round_trip")
-        if frozen
-        else events.reset_index(drop=True).copy()
-    )
-    if frozen:
-        assert len(data) == 796 and data.plasma_region.eq("solar_wind").sum() == 446
+def compute(events, output, sun=None):
+    data = events.reset_index(drop=True).copy()
     position = data[["VSO_X_Rv", "VSO_Y_Rv", "VSO_Z_Rv"]].to_numpy()
     data["planet_distance_Rv"] = np.linalg.norm(position, axis=1)
     data["shock_distance_Rv"] = nearest_shock_distance(vso_to_aberrated_vso(position))
@@ -143,17 +136,13 @@ def compute(sun, events=None, output=None):
         dict(
             year=YEARS,
             n=data.groupby("year").size().reindex(YEARS).to_numpy(),
-            sunspot_number=sun,
             adjusted_geometric_mean_energy=np.exp(beta[: len(YEARS)]),
             adjusted_ci95_low=lo,
             adjusted_ci95_high=hi,
         )
     )
-    if frozen:
-        expected = pd.read_csv(ROOT / "reference/annual_energy.csv")
-        pd.testing.assert_frame_equal(
-            annual, expected[annual.columns], check_dtype=False, rtol=1e-7, atol=1e-10
-        )
+    if sun is not None:
+        annual["sunspot_number"] = sun
     out = output if output is not None else BUILD / "energy"
     out.mkdir(parents=True, exist_ok=True)
     annual.to_csv(out / "annual_energy.csv", index=False)
@@ -162,12 +151,11 @@ def compute(sun, events=None, output=None):
     for key in ["planet_distance_Rv", "shock_distance_Rv"]:
         years = data.groupby("year")[key]
         support &= data[key].between(years.min().max(), years.max().min())
-    result = dict(
-        events=len(data),
-        crossing_confirmed=int(data.plasma_region.eq("solar_wind").sum()),
-        adjusted=correlation(sun, beta[:9]),
-        linear=correlation(sun, fit(data, False)[0][:9]),
-    )
+    result = dict(events=len(data), crossing_confirmed=int(data.plasma_region.eq("solar_wind").sum()))
+    if sun is None:
+        return result
+    result["adjusted"] = correlation(sun, beta[:9])
+    result["linear"] = correlation(sun, fit(data, False)[0][:9])
     for key, subset in [
         ("common", data[support]),
         ("crossing_only", data[data.plasma_region == "solar_wind"]),

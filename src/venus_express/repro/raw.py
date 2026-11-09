@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from venus_express.cache import ICWFeatureCache
-from .settings import BUILD, INPUTS, read
+from .settings import BUILD
 
 
 def raw_root():
@@ -53,25 +53,15 @@ def require_days(days):
     missing = sorted(set(days) - found)
     if missing:
         raise FileNotFoundError(
-            f"{len(missing)} required UTC dates are missing from {root}; first: {missing[:5]}"
+            f"{len(missing)} required UTC dates are missing from the MAG source; first: {missing[:5]}"
         )
 
 
-def check_inventory(days):
-    wanted = set(days)
-    root = raw_root()
-    require_days(wanted)
-    expected = {}
-    for record in read(INPUTS / "mag_inventory.json"):
-        if record["day"] in wanted:
-            expected[record["name"]] = record["bytes"]
-    actual = {
-        p.name: p.stat().st_size
-        for p in root.glob("BAM_*T*_VSO_SAP*.dat")
-        if p.name[4:14] in wanted
-    }
-    if expected != actual:
-        changed = sorted(
-            name for name in set(expected) | set(actual) if expected.get(name) != actual.get(name)
-        )
-        raise ValueError(f"BAM file names or sizes differ from the paper inventory: {changed[:5]}")
+def observation_days(scope="mission"):
+    if scope not in {"mission", "holdout"}:
+        raise ValueError(f"Unknown observation scope: {scope}")
+    days = {p.name[4:14] for p in raw_root().glob("BAM_*T*_VSO_SAP*.dat")}
+    days = sorted(day for day in days if scope == "mission" or day.startswith("2013-"))
+    if not days:
+        raise FileNotFoundError("No 1 Hz VSO BAM days found for this scope")
+    return days

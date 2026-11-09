@@ -45,6 +45,7 @@ def _bin_day(
     path_strings: list[str],
     bin_size_rv: float,
     position_stride: int,
+    stop_at: bytes | None = None,
 ) -> tuple[str, np.ndarray, np.ndarray, np.ndarray, str]:
     """Process one day in a child process and return sparse exposure bins."""
 
@@ -64,6 +65,10 @@ def _bin_day(
                 stripped = raw_line.lstrip()
                 if not stripped or stripped.startswith(b"#"):
                     continue
+                if stop_at is not None:
+                    stamp = stripped.split(maxsplit=1)[0]
+                    if stamp > stop_at:
+                        break
                 valid_record = b"99999.999" not in stripped
                 if valid_record:
                     block_valid_records += 1

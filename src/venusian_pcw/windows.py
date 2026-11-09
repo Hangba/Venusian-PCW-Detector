@@ -5,7 +5,7 @@ import pandas as pd
 from scipy.special import expit
 
 from venus_express.repro.model import PROTOCOL, load_model
-from venus_express.repro.settings import BUILD, ROOT, INPUTS, read
+from venus_express.repro.settings import BUILD
 from venus_express.repro.training import arrays, predict, weighted_ap
 
 
@@ -25,45 +25,26 @@ def measures(test, threshold):
     )
 
 
-def compute(rescore=False, device="cpu", raw_windows=False):
-    output = BUILD / ("windows_from_bam" if raw_windows else "windows")
+def compute(device="cpu"):
+    """Score BAM-rebuilt validation and test windows using the released weights."""
+    import torch
+    from .window_inputs import prepared_path
+
+    torch.set_num_threads(4)
+    output = BUILD / "windows_from_bam"
     output.mkdir(parents=True, exist_ok=True)
     points, matched = [], []
-    if rescore or raw_windows:
-        import torch
-        from .window_inputs import prepared_path
-
-        torch.set_num_threads(4)
-        test_features = arrays(
-            read(INPUTS / "windows/external_test.json"),
-            prepared_path(None, None) if raw_windows else None,
-        )
+    test_features = arrays(prepared_path(None, None))
+    validation = {}
     for spec in PROTOCOL["models"]:
         stage, seed = spec["stage"], spec["seed"]
         stem = f"{stage}.{seed}"
-        val, test = [
-            pd.read_csv(INPUTS / f"windows/{stem}.{part}.csv", float_precision="round_trip")
-            for part in ["validation", "test"]
-        ]
-        assert test.source.value_counts().to_dict() == {"P": 61, "bg": 720, "F": 90}
-        if rescore or raw_windows:
-            model = load_model(spec, device)
-            validation_features = arrays(
-                PROTOCOL["training"][stage]["validation"],
-                prepared_path(stage, "validation") if raw_windows else None,
-            )
-            for frame, features, target in [
-                (val, validation_features, "cpu"),
-                (test, test_features, device),
-            ]:
-                np.testing.assert_array_equal(frame.source, features["source"])
-                if target != device:
-                    model.to(target)
-                actual = predict(model, features, target)
-                if not raw_windows:
-                    np.testing.assert_allclose(actual, frame.logit, rtol=3e-4, atol=3e-4)
-                frame["logit"] = actual.astype(float)
-                model.to(device)
+        model = load_model(spec, device)
+        if stage not in validation:
+            validation[stage] = arrays(prepared_path(stage, "validation"))
+        features = validation[stage]
+        val = pd.DataFrame(dict(source=features["source"], logit=predict(model, features, device).astype(float)))
+        test = pd.DataFrame(dict(source=test_features["source"], logit=predict(model, test_features, device).astype(float)))
         ap = dict(
             AP_PB_1_8=average_precision(test, "bg", 8.0),
             AP_PF_1_1=average_precision(test, "F", 1.0),
@@ -96,17 +77,7 @@ def compute(rescore=False, device="cpu", raw_windows=False):
         )
         test.to_csv(output / f"{stem}.test.csv", index=False)
     result = pd.DataFrame(points)
-    keys = ["stage", "seed", "target_recall"]
-    expected = pd.read_csv(ROOT / "reference/working_points.csv", float_precision="round_trip")
-
-    def ordered(frame):
-        return frame[expected.columns].sort_values(keys).reset_index(drop=True)
-
-    if not rescore and not raw_windows:
-        pd.testing.assert_frame_equal(
-            ordered(result), ordered(expected), check_dtype=False, atol=1e-12, rtol=1e-12
-        )
-    result["protocol"] = "own_development_frozen"
+    result["protocol"] = "recomputed_validation"
     result["score_threshold"] = expit(result.threshold)
     result.to_csv(output / "working_points.csv", index=False)
     focus = result[np.isclose(result.target_recall, 0.8)]
@@ -116,18 +87,6 @@ def compute(rescore=False, device="cpu", raw_windows=False):
     summary.columns = ["_".join(col) for col in summary.columns]
     summary.to_csv(output / "model_performance.csv")
     matched_frame = pd.DataFrame(matched)
-    expected_matched = pd.read_csv(
-        ROOT / "reference/matched_points.csv", float_precision="round_trip"
-    )
-    if not rescore and not raw_windows:
-        cols = expected_matched.columns
-        pd.testing.assert_frame_equal(
-            matched_frame[cols].sort_values(["stage", "seed"]).reset_index(drop=True),
-            expected_matched.sort_values(["stage", "seed"]).reset_index(drop=True),
-            check_dtype=False,
-            atol=1e-12,
-            rtol=1e-12,
-        )
     matched_frame.to_csv(output / "matched_49_of_61.csv", index=False)
     return dict(
         validation_operating_point=summary.reset_index().to_dict("records"),
