@@ -1,4 +1,4 @@
-"""Year intercepts and distance-standardized wave energy in the 揭榜挂帅 paper."""
+"""Year intercepts and distance-standardized wave energy for the Venus Express catalogue."""
 
 import numpy as np
 import pandas as pd

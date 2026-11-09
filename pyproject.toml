@@ -3,9 +3,9 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "jiebang-venus-paper-repro"
+name = "venusian-pcw-detector"
 version = "0.1.0"
-description = "Reproduce the 揭榜挂帅 paper on pickup ions and the Venus induced magnetosphere"
+description = "Detect proton cyclotron waves and analyze Venus Express magnetic-field observations"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -13,6 +13,9 @@ dependencies = [
   "PyWavelets>=1.5", "scipy>=1.11", "torch>=2.2", "tqdm>=4.66",
   "zstandard>=0.22",
 ]
+
+[project.scripts]
+venusian-pcw = "venusian_pcw.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

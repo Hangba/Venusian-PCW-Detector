@@ -1,6 +1,4 @@
-"""Rebuild the competition manuscript figures from its frozen experiment inputs."""
-
-from pathlib import Path
+"""Render the reference figures for the Venus Express PCW study."""
 
 import matplotlib
 
@@ -29,11 +27,11 @@ from venus_express.sample_analysis.plots.rx_common import (
     format_rx_axis,
     prepare_rx_coordinates,
 )
-from matplotlib import font_manager
 
 from venus_express.repro.settings import ROOT, INPUTS, BUILD, FIGURES as OUT
 from .boundaries import bow_shock_data, bow_shock_curve
 from .mag import load_day, fac
+from .fonts import mixed_text_family, plot_families
 
 INK, GRAY, BLUE = "#20252b", "#67717c", "#1f5f8b"
 GREEN, RED, GOLD = "#347758", "#9e4e48", "#9a6c2c"
@@ -47,7 +45,9 @@ def save(fig, name):
     for label in fig.findobj(Text):
         value = label.get_text()
         if "$" in value and any("\u3400" <= char <= "\u9fff" for char in value):
-            label.set_fontfamily(cjk_family)
+            family = mixed_text_family(tuple(matplotlib.rcParams["font.family"]))
+            if family:
+                label.set_fontfamily(family)
     for ext in ("pdf", "png"):
         fig.savefig(OUT / f"{name}.{ext}", dpi=300, facecolor="white")
     plt.close(fig)
@@ -317,12 +317,13 @@ def model_results():
         ax.tick_params(axis="x", labelsize=7.9)
         for n, value in zip(stages, values):
             label = f"{value:.2f}" if ax == a else f"{value:.2%}"
+            alignment = {0: "left", len(STAGES) - 1: "right"}.get(n, "center")
             ax.annotate(
                 label,
                 (n, value),
                 xytext=(0, 6),
                 textcoords="offset points",
-                ha="center",
+                ha=alignment,
                 fontsize=7.5,
             )
     a.set(ylim=(0, 1.65), yticks=[0, 0.5, 1, 1.5])
@@ -909,39 +910,17 @@ def rx_examples():
     save(fig, "13_rx_case_orbits")
 
 
-def render(raw):
+def render(raw, families=(), paths=()):
     """Rebuild the current plots, using the fixed originals for BAM panels when requested."""
-    import os
     import shutil
 
     OUT.mkdir(parents=True, exist_ok=True)
-    font_dir = Path(os.environ.get("JIEBANG_CJK_FONT_DIR", Path.home() / "Library/Fonts"))
-    for font in (ROOT / "paper/fonts").glob("*.otf"):
-        font_manager.fontManager.addfont(font)
-    for font in font_dir.glob("SourceHanSerifSC-*.otf"):
-        font_manager.fontManager.addfont(font)
-    global cjk_family
-    for candidate in ("Source Han Serif SC", "Noto Serif CJK SC", "Songti SC"):
-        try:
-            font_manager.findfont(candidate, fallback_to_default=False)
-            cjk_family = candidate
-            break
-        except ValueError:
-            continue
-    else:
-        raise ValueError(
-            "Install Source Han Serif SC or Noto Serif CJK SC, or set JIEBANG_CJK_FONT_DIR"
-        )
+    fonts = plot_families(families, paths)
     with (
         analysis_figure_style(font_size=9.4),
         matplotlib.rc_context(
             {
-                "font.family": [
-                    font_manager.FontProperties(
-                        fname=ROOT / "paper/fonts/NewCMMath-Book.otf"
-                    ).get_name(),
-                    cjk_family,
-                ],
+                "font.family": fonts,
                 "axes.labelsize": 9.4,
                 "xtick.labelsize": 8.8,
                 "ytick.labelsize": 8.8,

@@ -5,7 +5,9 @@
 }
 #set document(title: "金星拾起离子及其对感应磁层的影响")
 #set page(paper: "a4", margin: (x: 22mm, y: 21mm), numbering: "1", number-align: center)
-#set text(font: ("New Computer Modern", "Songti SC", "Source Han Serif SC"), size: 12pt, lang: "zh")
+#let preferred-fonts = sys.inputs.at("font-families", default: "").split("|").filter(name => name != "")
+#let text-fonts = preferred-fonts + ("New Computer Modern", "Songti SC", "Source Han Serif SC")
+#set text(font: text-fonts, size: 12pt, lang: "zh")
 #set par(justify: true, leading: 0.65em, spacing: 9pt, first-line-indent: (amount: 2em, all: true))
 #set heading(numbering: none)
 #show heading.where(level: 1): set text(size: 18pt, weight: "bold")
