@@ -2,6 +2,40 @@
 
 对应当前中文论文《金星拾起离子及其对感应磁层的影响》，以项目中的 `揭榜挂帅报告.typ` 为稿件来源。仓库保留当前论文的 13 张图、正式模型、计算脚本和最小冻结派生数据。
 
+## 从原始 MAG 和事件清单复算
+
+安装依赖后，把 1 Hz VSO BAM 文件放到外部目录。仓库内的 `inputs/manual/event_list.csv` 是论文的 946 个 PCW 事件清单，包含起止时间和人工区域标签。
+
+```bash
+export VENUS_EXPRESS_RAW_DATA_DIR=/path/to/VEX_1Hz
+
+# 先用一天检查冷缓存和单事件结果
+python -m jiebang cache --day 2006-04-24
+python -m jiebang catalogue --day 2006-04-24
+
+# 全量计算，也可通过 --events /path/to/events.csv 指定自有清单
+python -m jiebang cache --workers 4
+python -m jiebang catalogue --workers 4
+python -m jiebang psd-audit --workers 4
+```
+
+缓存从 BAM 生成 FAC 磁场、局地回旋频率、椭圆率和波法向角，写入 `build/feature_cache/`。运行 `catalogue` 或 `search` 时也会自动补建所需缓存。`catalogue` 从原始记录计算位置、带内波能、静态弓激波连通性和扣连续谱后的氢密度，并按样本覆盖重算年际波能和氢密度拟合。逐事件输出和摘要在 `build/raw_catalogue/`，人工目录的 10 分钟归并与论文的全任务自动事件簇分别统计。
+
+同一数据源还能重建训练、验证和固定测试的模型输入。可选用 `cache --scope mission --workers 4` 并行预建全任务的可评分日缓存。窗口清单只包含时间、标签、父组和权重，张量从 BAM 和日缓存生成。例子如下。
+
+```bash
+python -m jiebang prepare-windows MStandard
+python -m jiebang train MStandard --seed 2026 --from-raw
+
+for stage in MSeed MExtend1 MExtend2 MStandard; do
+  python -m jiebang prepare-windows "$stage" --role validation
+done
+python -m jiebang prepare-windows fixed_test
+python -m jiebang evaluate-windows
+```
+
+重建的模型输入和重新评分结果分别位于 `build/window_features/` 和 `build/windows_from_bam/`。原始搜索、原始事件物理复算和冻结对照是可独立运行的入口。
+
 ## 快速复现
 
 需要 Python 3.12、Poppler 的 `pdftocairo`、Typst ≥ 0.14 和中文宋体类字体。重绘图件使用 Source Han Serif SC、Noto Serif CJK SC 或系统 Songti SC。若 Source Han Serif SC 的 OTF 不在系统字体目录，可用 `JIEBANG_CJK_FONT_DIR` 指向它。
@@ -49,7 +83,7 @@ python -m jiebang paper --generated
 
 搜索支持 `--day YYYY-MM-DD` 做单日对照，支持 `--resume` 复用同一次运行的逐日粗分数。建议依次执行共享数据源的命令。检测使用任务期和 2013 年各自冻结的 MStandard 检查点。
 
-## 模型重训和固定窗口前向
+## 使用作者冻结特征做精确对照
 
 ```bash
 export VENUS_EXPRESS_TRAINING_INPUT_DIR=/path/to/frozen-feature-root

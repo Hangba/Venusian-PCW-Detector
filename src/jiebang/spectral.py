@@ -110,31 +110,33 @@ def process(pair):
     return res
 
 
-def compute(workers, days):
-    catalogue = pd.read_csv(INPUTS / "manual/catalogue.csv")
+def compute(workers, days, events_path=None):
+    from .catalogue import read_events
+
+    catalogue = read_events(events_path or INPUTS / "manual/event_list.csv")
     if days:
-        catalogue = catalogue[catalogue.start.str[:10].isin(days)]
+        catalogue = catalogue[catalogue.start.dt.strftime("%Y-%m-%d").isin(days)]
     if catalogue.empty:
         raise ValueError("No frozen PCW catalogue events on the requested dates")
     groups = defaultdict(list)
     for i, row in catalogue.iterrows():
-        interval = (row.start, row.end)
+        interval = (row.start.isoformat(), row.end.isoformat())
         duration = (pd.Timestamp(row.end) - pd.Timestamp(row.start)).total_seconds()
         geometry = export_analysis_geometry(
             interval, min_display_sec=max(duration / 0.6, 300), analysis_pad_sec=320
         )
         context = tuple(VenusExpressDataset._get_date_list(geometry.analysis_trange))
         groups[context].append(
-            (dict(rank=i + 1, start_utc=row.start, end_utc=row.end, az=1), geometry)
+            (dict(rank=i + 1, start_utc=interval[0], end_utc=interval[1], az=1), geometry)
         )
-    require_days(catalogue.start.str[:10])
+    require_days(catalogue.start.dt.strftime("%Y-%m-%d"))
     with ThreadPoolExecutor(max_workers=workers) as pool:
         rows = [event for events in pool.map(process, groups.items()) for event in events]
     frame = pd.DataFrame(rows).sort_values("rank")
     from .statistics import peak_summary
 
     result = peak_summary(frame)
-    if not days:
+    if not days and events_path is None:
         assert result == dict(events=946, usable=917, outside=245, below=223, above=22)
     BUILD.mkdir(exist_ok=True)
     frame.to_csv(BUILD / "raw_psd_audit.csv", index=False)

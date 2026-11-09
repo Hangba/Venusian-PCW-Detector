@@ -1,5 +1,6 @@
 """Local, read-only VEX BAM provider for paper replay."""
 
+import fcntl
 import hashlib
 import os
 from pathlib import Path
@@ -18,6 +19,12 @@ def raw_root():
 
 
 class PaperFeatureCache(ICWFeatureCache):
+    def build_or_load_daily_features(self, date_str):
+        lock = Path(self._date_cache_path(date_str)).with_suffix(".lock")
+        with lock.open("a") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            return super().build_or_load_daily_features(date_str)
+
     def _build_daily_features(self, date_str):
         features = super()._build_daily_features(date_str)
         # Published inference read the serialized cache. Use the same precision

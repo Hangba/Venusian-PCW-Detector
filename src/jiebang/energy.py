@@ -109,9 +109,15 @@ def correlation(sun, log_energy):
     )
 
 
-def compute(sun):
-    data = pd.read_csv(INPUTS / "manual/wave_energy.csv", float_precision="round_trip")
-    assert len(data) == 796 and data.plasma_region.eq("solar_wind").sum() == 446
+def compute(sun, events=None, output=None):
+    frozen = events is None
+    data = (
+        pd.read_csv(INPUTS / "manual/wave_energy.csv", float_precision="round_trip")
+        if frozen
+        else events.reset_index(drop=True).copy()
+    )
+    if frozen:
+        assert len(data) == 796 and data.plasma_region.eq("solar_wind").sum() == 446
     position = data[["VSO_X_Rv", "VSO_Y_Rv", "VSO_Z_Rv"]].to_numpy()
     data["planet_distance_Rv"] = np.linalg.norm(position, axis=1)
     data["shock_distance_Rv"] = nearest_shock_distance(vso_to_aberrated_vso(position))
@@ -143,11 +149,12 @@ def compute(sun):
             adjusted_ci95_high=hi,
         )
     )
-    expected = pd.read_csv(ROOT / "reference/annual_energy.csv")
-    pd.testing.assert_frame_equal(
-        annual, expected[annual.columns], check_dtype=False, rtol=1e-7, atol=1e-10
-    )
-    out = BUILD / "energy"
+    if frozen:
+        expected = pd.read_csv(ROOT / "reference/annual_energy.csv")
+        pd.testing.assert_frame_equal(
+            annual, expected[annual.columns], check_dtype=False, rtol=1e-7, atol=1e-10
+        )
+    out = output if output is not None else BUILD / "energy"
     out.mkdir(parents=True, exist_ok=True)
     annual.to_csv(out / "annual_energy.csv", index=False)
 
@@ -155,11 +162,16 @@ def compute(sun):
     for key in ["planet_distance_Rv", "shock_distance_Rv"]:
         years = data.groupby("year")[key]
         support &= data[key].between(years.min().max(), years.max().min())
-    return dict(
+    result = dict(
         events=len(data),
-        crossing_confirmed=446,
+        crossing_confirmed=int(data.plasma_region.eq("solar_wind").sum()),
         adjusted=correlation(sun, beta[:9]),
         linear=correlation(sun, fit(data, False)[0][:9]),
-        common=correlation(sun, fit(data[support])[0][:9]),
-        crossing_only=correlation(sun, fit(data[data.plasma_region == "solar_wind"])[0][:9]),
     )
+    for key, subset in [
+        ("common", data[support]),
+        ("crossing_only", data[data.plasma_region == "solar_wind"]),
+    ]:
+        if subset.year.nunique() == len(YEARS) and len(subset) >= 15:
+            result[key] = correlation(sun, fit(subset)[0][:9])
+    return result

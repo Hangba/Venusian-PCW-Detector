@@ -362,5 +362,57 @@
   "inputs/holdout/inference_runtime.json": {
     "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/inference_complete.json",
     "sha256": "f5b6aedc0b10f421117376d8dfd546ba002fb56ec21c6d36351f961c29730089"
+  },
+  "inputs/manual/event_list.csv": {
+    "source": "VenusExpress/runs/paper_annual_wave_energy_sunspot_bars_20261028/sample_selection.csv",
+    "sha256": "1008523cd9905dc4c927a61ce7e48cfbc1dc28cddeaf8a963095b181e52dd027"
+  },
+  "inputs/window_lists/MSeed_train.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MSeed_train.npz",
+    "sha256": "b1e74761af2c533ba62393074aa2a79677486ae547f746d53b97b0c78b6d81c2"
+  },
+  "inputs/window_lists/MSeed_validation.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MSeed_validation.npz",
+    "sha256": "c9c00450b4e4bddebe7bb2d3481d1bedc7fec7c671f8dc5144e303364d9524d5"
+  },
+  "inputs/window_lists/MExtend1_train.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MExtend1_train.npz",
+    "sha256": "142bf364859ba2401e279247154ffb4697d57e9834b4e514f927d5e2f1d8a03d"
+  },
+  "inputs/window_lists/MExtend1_validation.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MExtend1_validation.npz",
+    "sha256": "0625fb4daf07e950dc81cc9d76d589ef3956e4af003057117e9ee7f3ccf498fa"
+  },
+  "inputs/window_lists/MExtend2_train.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MExtend2_train.npz",
+    "sha256": "00e2d72e545636b21c5d57629aef50f62beb8dc20debc822e8f0e8d9d570b73c"
+  },
+  "inputs/window_lists/MExtend2_validation.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MExtend2_validation.npz",
+    "sha256": "06237a8a87ce71db332202e265bea66b3eae5736eeed6bb18534f089a7ffd5e4"
+  },
+  "inputs/window_lists/MStandard_train.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MStandard_train.npz",
+    "sha256": "5f3d66e246db51a5ec685a657027fa5c0ca231e96b35c42ac74ed7192c20aa06"
+  },
+  "inputs/window_lists/MStandard_validation.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/MStandard_validation.npz",
+    "sha256": "c44bd428353c51a49a2c3e5f1db242e9406f759e2230148c34bc028f2b009dcf"
+  },
+  "inputs/window_lists/holdout2013_train.csv.gz": {
+    "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/MStandard_train.npz",
+    "sha256": "abbf6fbda90738694688aa6d91a77c731b3c8b74ef177dd133e928f67e7412dc"
+  },
+  "inputs/window_lists/holdout2013_validation.csv.gz": {
+    "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/MStandard_validation.npz",
+    "sha256": "13d579db1852338de45ed24b79e423582bf9b757ab0511edb3ad6ab81f5283ad"
+  },
+  "inputs/window_lists/fixed_test.csv.gz": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/test.npz",
+    "sha256": "8a5a45602f4cc59de05797c4411793c52e8dea0f91c2b4e9f75bbb0bfbcd090a"
+  },
+  "inputs/manual/density_bootstrap_days.csv": {
+    "source": "VenusExpress/runs/h_exospheric_pcw_eventfit_no2pi_phi80_20261104/exospheric_events.csv",
+    "sha256": "228cac58eadc7a7a97430b879a25af2a8f881700011778abdb897d34949fdaa6"
   }
 }

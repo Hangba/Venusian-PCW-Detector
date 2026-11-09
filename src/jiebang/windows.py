@@ -25,15 +25,19 @@ def measures(test, threshold):
     )
 
 
-def compute(rescore=False, device="cpu"):
-    output = BUILD / "windows"
+def compute(rescore=False, device="cpu", raw_windows=False):
+    output = BUILD / ("windows_from_bam" if raw_windows else "windows")
     output.mkdir(parents=True, exist_ok=True)
     points, matched = [], []
-    if rescore:
+    if rescore or raw_windows:
         import torch
+        from .window_inputs import prepared_path
 
         torch.set_num_threads(4)
-        test_features = arrays(read(INPUTS / "windows/external_test.json"))
+        test_features = arrays(
+            read(INPUTS / "windows/external_test.json"),
+            prepared_path(None, None) if raw_windows else None,
+        )
     for spec in PROTOCOL["models"]:
         stage, seed = spec["stage"], spec["seed"]
         stem = f"{stage}.{seed}"
@@ -42,9 +46,12 @@ def compute(rescore=False, device="cpu"):
             for part in ["validation", "test"]
         ]
         assert test.source.value_counts().to_dict() == {"P": 61, "bg": 720, "F": 90}
-        if rescore:
+        if rescore or raw_windows:
             model = load_model(spec, device)
-            validation_features = arrays(PROTOCOL["training"][stage]["validation"])
+            validation_features = arrays(
+                PROTOCOL["training"][stage]["validation"],
+                prepared_path(stage, "validation") if raw_windows else None,
+            )
             for frame, features, target in [
                 (val, validation_features, "cpu"),
                 (test, test_features, device),
@@ -53,7 +60,8 @@ def compute(rescore=False, device="cpu"):
                 if target != device:
                     model.to(target)
                 actual = predict(model, features, target)
-                np.testing.assert_allclose(actual, frame.logit, rtol=3e-4, atol=3e-4)
+                if not raw_windows:
+                    np.testing.assert_allclose(actual, frame.logit, rtol=3e-4, atol=3e-4)
                 frame["logit"] = actual.astype(float)
                 model.to(device)
         ap = dict(
@@ -94,7 +102,7 @@ def compute(rescore=False, device="cpu"):
     def ordered(frame):
         return frame[expected.columns].sort_values(keys).reset_index(drop=True)
 
-    if not rescore:
+    if not rescore and not raw_windows:
         pd.testing.assert_frame_equal(
             ordered(result), ordered(expected), check_dtype=False, atol=1e-12, rtol=1e-12
         )
@@ -111,7 +119,7 @@ def compute(rescore=False, device="cpu"):
     expected_matched = pd.read_csv(
         ROOT / "reference/matched_points.csv", float_precision="round_trip"
     )
-    if not rescore:
+    if not rescore and not raw_windows:
         cols = expected_matched.columns
         pd.testing.assert_frame_equal(
             matched_frame[cols].sort_values(["stage", "seed"]).reset_index(drop=True),

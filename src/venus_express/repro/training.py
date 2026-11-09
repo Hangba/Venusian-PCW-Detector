@@ -21,8 +21,9 @@ MASS = {
 }
 
 
-def arrays(spec):
-    with np.load(training_file(spec), allow_pickle=False) as z:
+def arrays(spec, prepared_path=None):
+    path = training_file(spec) if prepared_path is None else prepared_path
+    with np.load(path, allow_pickle=False) as z:
         result = dict(z)
     if "class_source" not in result:
         result["class_source"] = result["source"]
@@ -108,11 +109,14 @@ def validation_metrics(data, z):
     )
 
 
-def fit(stage, seed, device):
+def fit(stage, seed, device, prepared=None):
     if stage == "holdout2013" and seed != 2026:
         raise ValueError("The 2013 holdout fit uses seed 2026")
     roles = PROTOCOL["training"][stage]
-    train, validation = arrays(roles["train"]), arrays(roles["validation"])
+    train, validation = [
+        arrays(roles[role], prepared[role] if prepared else None)
+        for role in ("train", "validation")
+    ]
     assert "F" not in validation["class_source"]
     is_standard = stage in {"MStandard", "holdout2013"}
     is_f = train["class_source"] == "F"
@@ -126,7 +130,7 @@ def fit(stage, seed, device):
     torch.manual_seed(seed)
     torch.set_num_threads(4)
     model = build_model().to(device)
-    output = BUILD / "training" / stage / f"seed{seed}"
+    output = BUILD / ("training_from_bam" if prepared else "training") / stage / f"seed{seed}"
     output.mkdir(parents=True, exist_ok=False)
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0003, weight_decay=0.01)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100)

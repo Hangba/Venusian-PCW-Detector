@@ -37,7 +37,6 @@ def fit(events):
 
 def compute(raw=False):
     output = BUILD / "density"
-    output.mkdir(parents=True, exist_ok=True)
     events = pd.read_csv(INPUTS / "manual/density.csv")
     states = [connection(row) for row in events.itertuples()]
     np.testing.assert_array_equal(states, events.B0ShockConnection)
@@ -51,13 +50,18 @@ def compute(raw=False):
         recomputed = [pickup_density(source, row) for row in events.itertuples()]
         np.testing.assert_allclose(recomputed, events.n_Hplus_pickup_cm3, rtol=5e-6, atol=1e-12)
         events["n_Hplus_pickup_cm3"] = recomputed
-    events["altitude_Rv"] = events.VSO_R_Rv - 1
     events["n_H_neutral_cm3"] = (
         events.paper_fgyro_hz
         * events.n_Hplus_pickup_cm3
         / (80 * events.paper_total_ionization_rate_s)
     )
     assert len(events) == 78
+    return fit_with_bootstrap(events, output)
+
+
+def fit_with_bootstrap(events, output):
+    output.mkdir(parents=True, exist_ok=True)
+    events = events.assign(altitude_Rv=events.VSO_R_Rv - 1)
     events.to_csv(output / "exospheric_events.csv", index=False)
     result = fit(events)
     groups = [frame for _, frame in events.groupby("day", sort=False)]
@@ -67,6 +71,8 @@ def compute(raw=False):
         sample = pd.concat(
             [groups[k] for k in rng.integers(len(groups), size=len(groups))], ignore_index=True
         )
+        if len(sample) < 3:
+            continue
         trial = fit(sample)
         draws.append(
             dict(
@@ -82,6 +88,7 @@ def compute(raw=False):
     summary = dict(
         events=len(events),
         days=len(groups),
+        bootstrap_draws=len(bootstrap),
         n25=result.reference_density_cm3,
         n25_95=bootstrap.n25.quantile([0.025, 0.975]).tolist(),
         T=result.temperature_k,
