@@ -1,0 +1,13 @@
+stage,seed,epochs,optimizer_steps,elapsed_seconds,completion_source
+MSeed,2026,100,5200,104.59919879199879,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MSeed/seed2026/completion.json
+MExtend1,2026,100,5200,105.13340133300517,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend1/seed2026/completion.json
+MExtend2,2026,100,5200,106.49836862500524,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend2/seed2026/completion.json
+MStandard,2026,100,5200,132.27901441699942,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MStandard/seed2026/completion.json
+MSeed,2027,100,5200,103.96884425000462,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MSeed/seed2027/completion.json
+MExtend1,2027,100,5200,104.19023008400109,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend1/seed2027/completion.json
+MExtend2,2027,100,5200,105.13127024999994,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend2/seed2027/completion.json
+MStandard,2027,100,5200,128.87858175000292,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MStandard/seed2027/completion.json
+MSeed,2028,100,5200,103.89543237500766,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MSeed/seed2028/completion.json
+MExtend1,2028,100,5200,104.24855208399822,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend1/seed2028/completion.json
+MExtend2,2028,100,5200,104.61880537499383,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend2/seed2028/completion.json
+MStandard,2028,100,5200,128.9846194999991,runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MStandard/seed2028/completion.json

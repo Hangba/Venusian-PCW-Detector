@@ -1,0 +1,63 @@
+{
+  "reviewed": 50,
+  "label_counts": {
+    "PCW": 38,
+    "ULF": 12
+  },
+  "precision_at_k": {
+    "10": {
+      "PCW": 9,
+      "reviewed": 10,
+      "precision": 0.9,
+      "wilson95": [
+        0.5958499732047615,
+        0.9821237869049271
+      ]
+    },
+    "25": {
+      "PCW": 20,
+      "reviewed": 25,
+      "precision": 0.8,
+      "wilson95": [
+        0.6086904963045967,
+        0.9113941531319742
+      ]
+    },
+    "50": {
+      "PCW": 38,
+      "reviewed": 50,
+      "precision": 0.76,
+      "wilson95": [
+        0.6258731624205708,
+        0.8570260860300828
+      ]
+    }
+  },
+  "paths": {
+    "rescue": {
+      "reviewed": 12,
+      "PCW": 8,
+      "ULF": 4,
+      "precision": 0.6666666666666666
+    },
+    "whole_pass": {
+      "reviewed": 38,
+      "PCW": 30,
+      "ULF": 8,
+      "precision": 0.7894736842105263
+    }
+  },
+  "reviews_to_confirm_PCW": {
+    "5": 5,
+    "10": 12,
+    "20": 25,
+    "30": 38
+  },
+  "manual_same_event_links": 0,
+  "annotated_boundary_count": 0,
+  "review_dates": 37,
+  "label_source": "Explicit categorical entries in notes, copied to human_label; original file preserved.",
+  "received_sha256": "11f123262c4dd4737bb86f38392da85dfdec91d5a09a01d9d1a13a35f44a7af9",
+  "cards_sha256": "a68dda5e6f03c2cd1b6ec8ec7b75aadee7db100625ac665ff5ab0f5b18ab4797",
+  "interpretation": "Candidate precision at the original score ranking. Review-derived positives are not added to the pre-existing recall reference catalogue."
+}

@@ -1,0 +1,11 @@
+/build/
+/.venv/
+/data/
+/cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.DS_Store
+/runs/
+*.dat
+*.npz

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" demote-non-dropping-particle="never" default-locale="en-US">
+  <info><title>Report reference.docx author-year format</title><id>http://www.zotero.org/styles/report-reference-docx</id><updated>2026-09-14T00:00:00+00:00</updated></info>
+  <macro name="author"><names variable="author"><name name-as-sort-order="all" sort-separator=" " initialize-with=" " delimiter=", "/><substitute><text variable="title"/></substitute></names></macro>
+  <macro name="year"><date variable="issued"><date-part name="year"/></date><text variable="year-suffix"/></macro>
+  <citation collapse="citation-number">
+    <sort><key variable="citation-number"/></sort>
+    <layout prefix="[" suffix="]" delimiter=", "><text variable="citation-number"/></layout>
+  </citation>
+  <bibliography hanging-indent="true" entry-spacing="1">
+    <layout><text variable="citation-number" prefix="[" suffix="] "/><text macro="author" suffix=". "/><text macro="year" suffix=". "/><text variable="note"/></layout>
+  </bibliography>
+</style>

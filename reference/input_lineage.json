@@ -1,0 +1,366 @@
+{
+  "checkpoints/holdout2013.pt": {
+    "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/best.pt",
+    "sha256": "057abe04e5b3d0c136ffc9f6e8009903e6ba9040bb038196daddc27cb70f2eab"
+  },
+  "checkpoints/MExtend2/seed2028.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend2/seed2028/attempt_20261014T151902378830_90302/epochs/epoch007.pt",
+    "sha256": "4af290a80b4d3ed62b89dffcfe417997aff03a7f3477686ca5f133accf81a54f"
+  },
+  "checkpoints/MExtend2/seed2026.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend2/seed2026/attempt_20261014T150412668930_90302/epochs/epoch036.pt",
+    "sha256": "58ee84662673f52bfe16d36aa33de415c88eff2ff26b03c98fc3769bed77c711"
+  },
+  "checkpoints/MExtend2/seed2027.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend2/seed2027/attempt_20261014T151139925369_90302/epochs/epoch033.pt",
+    "sha256": "4ea1587b81264df63f5a75178cf8310dc1be35ae8090bfbc287158a874f26fb4"
+  },
+  "checkpoints/MSeed/seed2028.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MSeed/seed2028/attempt_20261014T151534107600_90302/epochs/epoch030.pt",
+    "sha256": "6bb3820c0ad506ecfa90584323ac4dc7c3fc7b2b41e0e5ec7b7da50ce8168cee"
+  },
+  "checkpoints/MSeed/seed2026.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MSeed/seed2026/attempt_20261014T150042221088_90302/epochs/epoch038.pt",
+    "sha256": "e0968c751c56bb12ce86c9605ead660a6e20afa3eb56ed73299a547e6602c9e0"
+  },
+  "checkpoints/MSeed/seed2027.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MSeed/seed2027/attempt_20261014T150811640489_90302/epochs/epoch046.pt",
+    "sha256": "8a7a198ece2f6b500de046d7e7fb74e61e96b2fe31e40b534b0a38c5d2a6ddd2"
+  },
+  "checkpoints/MStandard/seed2028.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MStandard/seed2028/attempt_20261014T152047065132_90302/epochs/epoch020.pt",
+    "sha256": "84236b3fd2602cb4aed23ec94ac80e5501a1dc5187a70802c3749e61de5af650"
+  },
+  "checkpoints/MStandard/seed2026.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MStandard/seed2026/attempt_20261014T150559261779_90302/epochs/epoch065.pt",
+    "sha256": "9b35d7a7bc2d879362a83da187de803565eb3579beee22b96b2b28134c464252"
+  },
+  "checkpoints/MStandard/seed2027.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MStandard/seed2027/attempt_20261014T151325156866_90302/epochs/epoch048.pt",
+    "sha256": "0f8717589b190633ab5811098862becd36c01f5258c855a51d5c329629dbee47"
+  },
+  "checkpoints/MExtend1/seed2028.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend1/seed2028/attempt_20261014T151718064627_90302/epochs/epoch044.pt",
+    "sha256": "d570aa961f70e73a4ba34671f420e02eaa35739591a9414a534370b2537a87be"
+  },
+  "checkpoints/MExtend1/seed2026.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend1/seed2026/attempt_20261014T150227447127_90302/epochs/epoch007.pt",
+    "sha256": "f6e7012618a954389fca7a0fcb59d616b4fb783a609c8fb1df2a77535c00ae75"
+  },
+  "checkpoints/MExtend1/seed2027.pt": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/models/MExtend1/seed2027/attempt_20261014T150955669382_90302/epochs/epoch012.pt",
+    "sha256": "dc28be8518e3599983e11417c6a5e36fc2d2b2c6abae3a7e7d25ceb852f22951"
+  },
+  "inputs/mission/exposure_days.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/exposure_days.csv",
+    "sha256": "2251485206fa94269e432b704ef84017a735aa9c0ebc38175cb0324db2d50ef5"
+  },
+  "inputs/mission/cluster_positions.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/spatial/cluster_positions.csv",
+    "sha256": "94f04212e9bdd38009e4ec57014b2313aa340dd98039c8a493ac430d7d21566f"
+  },
+  "inputs/mission/parent_outcomes.json.gz": {
+    "source": "VenusExpress/experiments/unified_refinement/result/parent_outcomes.json",
+    "sha256": "52e05f4fc5b22b6a8bfd7a69beea54df2e4f80a756cff67adcd37c39d6462b8d"
+  },
+  "inputs/mission/cluster_occurrence.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/spatial/cluster_occurrence.csv",
+    "sha256": "e4896a80744511f7e49e6d86984358f10bb937411e7409d5887ad116ca80ffde"
+  },
+  "inputs/mission/exposure_annual.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/exposure_annual.csv",
+    "sha256": "50b5bb95327405d249d8666b9f7aac3461b39d8259612f50fae56bbf93af7333"
+  },
+  "inputs/holdout/all_parent_candidates.json": {
+    "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/all_parent_candidates.json",
+    "sha256": "7b89888cb94056741e797eb03b468eb718084ee9f2fb2e12c9a89f29ba293743"
+  },
+  "inputs/holdout/review_summary.json": {
+    "source": "VenusExpress/runs/mstandard_performance_2013_reviewed_20261023/review_summary.json",
+    "sha256": "1135a7edc6bdb3c1485ffa192762d7fcc281ea18f796bf64840111c6688dcb12"
+  },
+  "inputs/holdout/deduplicated_ranked.json": {
+    "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/deduplicated_ranked.json",
+    "sha256": "25172ef44fc8156a5d4b9e49c0ed5a5b98ae4cdaed5544657898428fed41dde5"
+  },
+  "inputs/holdout/review.csv": {
+    "source": "VenusExpress/runs/mstandard_performance_2013_reviewed_20261023/review_ranked.csv",
+    "sha256": "a923ae8830baa1316b222c0f633bddcde9b34b105c78e87b918197077b903108"
+  },
+  "inputs/protocol.json": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/plan.json",
+    "sha256": "66a948717b5aa58a3fe971f723bafa1ff29a038290b3e1414463d81bf4dde30f"
+  },
+  "inputs/silso.csv": {
+    "source": "VenusExpress/runs/paper_annual_sunspot_dicw_20261024/sources/SN_y_tot_V2.0.csv",
+    "sha256": "0ccb2104b03f2f0c4ad151c97f8721139414cae288a039cdeb37ee36c9e35b6d"
+  },
+  "inputs/mag_inventory.json": {
+    "source": "VenusExpress/runs/four_model_gap4_stft_global_20261016/plan.json",
+    "sha256": "5e0f2820576a6f16f4756b1e2f235f452545dab2ff5ed053021c614d59fd6802"
+  },
+  "inputs/manual/catalogue.csv": {
+    "source": "VenusExpress/runs/paper_strict_pcw_manual_20260930/PCW_retained.csv",
+    "sha256": "6a1e92a1698957129fd8f0e0249631fcbfa8fe66ce1351790522feb5e5194d72"
+  },
+  "inputs/manual/density.csv": {
+    "source": "VenusExpress/runs/h_exospheric_pcw_no2pi_phi80_20261104/all_dayside_events_with_geometry.csv",
+    "sha256": "ebff922bff158d9ac73adf16e0c0c6e00bcf22159fec22f903378f52a103f5ef"
+  },
+  "inputs/manual/spatial.csv": {
+    "source": "VenusExpress/runs/paper_strict_pcw_manual_20260930/spatial/events.csv",
+    "sha256": "f5d45c96a8328f6bce79144a816a580378650a01d7d128d1d44dea3e3d5b5464"
+  },
+  "reference/mission_metrics_10min.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/mission_metrics_10min.csv",
+    "sha256": "3652c6d6860202e8e2ca57fcf8ad3d326c0fdbb841d32392b0c8c6e6a16e70b1"
+  },
+  "reference/annual_metrics_10min.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/annual_metrics_10min.csv",
+    "sha256": "29734bc8e48d857bb986ec73b72708e8d2e8522253c0eda14196d4f81c648920"
+  },
+  "reference/catalogue_overlap.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/catalogue_overlap.csv",
+    "sha256": "2d80337f47c3cb4395e85c4d09ffd36555c6e7c180848aef3410db956d25e8cd"
+  },
+  "reference/parent_outcomes_summary.csv": {
+    "source": "VenusExpress/experiments/unified_refinement/result/occurrence/parent_outcomes_summary.csv",
+    "sha256": "567de960a06551371ad84acad0eb2c11c797ae3bbaa57057f8efd5f4f04ec942"
+  },
+  "reference/density_fit.json": {
+    "source": "VenusExpress/runs/h_exospheric_pcw_eventfit_no2pi_phi80_20261104/summary.json",
+    "sha256": "8da41f24a3e508baac0af5b0a7f2945f1327c77d6450aaa45b9d08381f58d00e"
+  },
+  "paper/fonts/NewCMMath-Book.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCMMath-Book.otf",
+    "sha256": "ac2f4393db81faa7242751483e52de8fd784c89bd00c20d07aaa938c68441ff8"
+  },
+  "paper/fonts/NewCM10-Bold.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-Bold.otf",
+    "sha256": "e2edca3824449f16f157777e23ce1addcb6f5c30cc24ef647e6bc38cd402c3aa"
+  },
+  "paper/fonts/NewCM10-BookItalic.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-BookItalic.otf",
+    "sha256": "015ebc3aaab52eff3c5a35e94e7c57487e6244d4fc22ebba4eee8d479d8b800a"
+  },
+  "paper/fonts/NewCM10-Book.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-Book.otf",
+    "sha256": "2e3d9e40a23ae028d24c5dce657478fb50bd300ae765467a678b556a90c76903"
+  },
+  "paper/fonts/NewCM10-BoldItalic.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-BoldItalic.otf",
+    "sha256": "20b5b66cfcea1383106570e5f3285e099735d9c5377a32a636f382e8ece5fcd9"
+  },
+  "paper/literature/references.bib": {
+    "source": "揭榜挂帅/literature/references.bib",
+    "sha256": "bc183639b5f45d7b983170f9e0bda6140d8685c5805ad37d75838d84fe9cc486"
+  },
+  "paper/literature/reference-format.csl": {
+    "source": "揭榜挂帅/literature/reference-format.csl",
+    "sha256": "70c0fbe3b5e63485b823551e7d68747cd85627a770e732af4ec5e3a60bcf8956"
+  },
+  "paper/reference_figures/01_research_flow.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/01_research_flow.pdf",
+    "sha256": "e0eac33aa09cd2a3d63bc6f657d3633c9b1577f9acf76feba22da11162a70516"
+  },
+  "paper/reference_figures/02_model_architecture.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/02_model_architecture.pdf",
+    "sha256": "cbb645e969f65cb45441f32085560fc8eb68535b95dfd0df508eb3883f03d4d4"
+  },
+  "paper/reference_figures/03_model_evaluation.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_axis_style_20261109/03_model_evaluation.pdf",
+    "sha256": "29de520ac6cbc119f03237b5aa3028a8f0c84964f7d5afa9bd5225ef0dcda8df"
+  },
+  "paper/reference_figures/04_pcw_event.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/04_pcw_event.pdf",
+    "sha256": "2a6d3552589a219ec5064f0ebb83d0728e7eb6fabadd77cb05835882799efe9c"
+  },
+  "paper/reference_figures/13_rx_case_orbits.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/13_rx_case_orbits.pdf",
+    "sha256": "8ad581fcfbe72b9e401c2fd62cf7879f6f3730cd539ab26995953af5868bd816"
+  },
+  "paper/reference_figures/05_annual_response.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_axis_style_20261109/05_annual_response.pdf",
+    "sha256": "a334b3af7bb6124ba3b30a20745daccd7348cd0a1be389129a7cca4a23c3cc22"
+  },
+  "paper/reference_figures/11_rx_cluster_occurrence.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/11_rx_cluster_occurrence.pdf",
+    "sha256": "64ec7940f2a1b0cb3c482a75b14ddb1d5f42673b3088ba2d8445e2d42772f27a"
+  },
+  "paper/reference_figures/12_rx_manual_energy.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/12_rx_manual_energy.pdf",
+    "sha256": "3c9f7e81466e6085cfa5f430b73c1fd8082ee43e1a3162830276065c6c46fa93"
+  },
+  "paper/reference_figures/06_h_density.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/06_h_density.pdf",
+    "sha256": "a185bfee2aaf6e39fecd8c154fe3920ae6cdb818394daf09af9e31253d12c191"
+  },
+  "paper/reference_figures/07_solar_cycle.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/07_solar_cycle.pdf",
+    "sha256": "94825d7cc8ecedaa6bd43eac91777b58c599d08038cfc4d32f7d81067c56cb03"
+  },
+  "paper/reference_figures/08_shock_compression.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_axis_style_20261109/08_shock_compression.pdf",
+    "sha256": "59389cab69927b0f867c2c9cfa18af35de04f2a8c2d65a5797035b5da65058f2"
+  },
+  "paper/reference_figures/09_shock_geometry.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/09_shock_geometry.pdf",
+    "sha256": "226aac3ea63684c0153e801adf387a37bb2fc0371186d2ca264f6e13dabd4fd2"
+  },
+  "paper/reference_figures/10_radial_imf_event.pdf": {
+    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/10_radial_imf_event.pdf",
+    "sha256": "6020fda4d728ae460d57a007a58c3f91a8f2036e56e5cf2914db4309b6ce768a"
+  },
+  "inputs/manual/hero_events.csv": {
+    "source": "揭榜挂帅/assets/figures/hero_20140222/hero_events.csv",
+    "sha256": "ae966a3726422eabd291f9781e592c7de6114585e88073d3ab4db93363d4ec8a"
+  },
+  "inputs/silso_monthly.csv": {
+    "source": "VenusExpress/data/Sunspot_Number.csv",
+    "sha256": "d9b7c0639a6e3f2000b3cedcfe72c0e4032ba7adcaa7cab74c0069080d11c940"
+  },
+  "inputs/manual/wave_energy.csv": {
+    "source": "VenusExpress/runs/paper_annual_wave_energy_sunspot_bars_20261028/event_energy_distances.csv",
+    "sha256": "7f5432683d16cd268f46f255badabfc13d81bd570750b68549d567e3821f19e3"
+  },
+  "reference/annual_energy.csv": {
+    "source": "VenusExpress/runs/paper_annual_wave_energy_sunspot_bars_20261028/annual_energy.csv",
+    "sha256": "0d563fb646a38ff7b3d3df5a245fb1b140363cef9a60edb4f15d8b94f711a7d4"
+  },
+  "inputs/manual/psd_audit.csv": {
+    "source": "VenusExpress/runs/pcw_dicw_psd_interpolate05_20261105/pcw_events.csv",
+    "sha256": "6fccdbbc7317a2cbcf9c576cea7222801af3cfc124005aa73adb4e971a89f09e"
+  },
+  "inputs/model_runtime.csv": {
+    "source": "VenusExpress/runs/paper_model_refresh_20261015/training_runtime.csv",
+    "sha256": "8aade32ff9ee45dd87f5dfd75223293f769bddf58e3f8d314dabdc4949c1ff71"
+  },
+  "reference/runtime_four_days.md": {
+    "source": "VenusExpress/runs/runtime_current_pipeline_20261016/report.md",
+    "sha256": "63f4adec35f1177af1eb7dd4a62f8e5f25d9741e6bc4830b4030c2c3932d66e4"
+  },
+  "inputs/boundaries/source_compression.pdf": {
+    "source": "揭榜挂帅/assets/figures/sza_field_jump.pdf",
+    "sha256": "aa44e043d01f2904d650013879dd9258d208c6d0775baa2b3db79a3a8b5af581"
+  },
+  "inputs/boundaries/source_geometry.pdf": {
+    "source": "揭榜挂帅/assets/figures/bow_shock.pdf",
+    "sha256": "0cc7df35829e3b3f1871d3959e6fdfdcf0711481c4f04f9ec385ecbd57124ebd"
+  },
+  "inputs/boundaries/radial_imf.csv": {
+    "source": "揭榜挂帅/output/pptx/准径向IMF.xlsx",
+    "sha256": "1cb1eda06086e0efb04e49af4bf8f69d3fd676a11984d91204a8f3211c8e56a6"
+  },
+  "inputs/windows/MSeed.2026.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MSeed/seed2026/validation_selected_CPU.npz",
+    "sha256": "5fbb04f819b86019097f433506064b2d8d66e459c2eda206e3f2835167dbbf26"
+  },
+  "inputs/windows/MSeed.2026.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MSeed.2026/original_test.npz",
+    "sha256": "bb9127ba293af5eddbbf6cdac7253337764350be42df5ea3896a3f9693246ea1"
+  },
+  "inputs/windows/MSeed.2027.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MSeed/seed2027/validation_selected_CPU.npz",
+    "sha256": "d0aeb1d17c810af5097563197297d01809b3935f33d2a9aa0cc9755a51dbae9f"
+  },
+  "inputs/windows/MSeed.2027.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MSeed.2027/original_test.npz",
+    "sha256": "6db0fad9d5c41a62370ea36cdffb588a3d70dfc87a845126f107034af1a14d0b"
+  },
+  "inputs/windows/MSeed.2028.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MSeed/seed2028/validation_selected_CPU.npz",
+    "sha256": "e10f032208f927a264d200b03c73ab2c378f54147ff9edabd40a268a3b05c843"
+  },
+  "inputs/windows/MSeed.2028.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MSeed.2028/original_test.npz",
+    "sha256": "1e5986006f20bd4056b632679df86e39af63102a406c4c66299c9b9274daefe2"
+  },
+  "inputs/windows/MExtend1.2026.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MExtend1/seed2026/validation_selected_CPU.npz",
+    "sha256": "cbef8e86aadb3fe506289f3af6d87d6d3c7e8b26a98f5513d150d197215e8a11"
+  },
+  "inputs/windows/MExtend1.2026.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MExtend1.2026/original_test.npz",
+    "sha256": "00ae821a4aefa71429295a21c1e5a901f27e281b0943166a5f31210a65590256"
+  },
+  "inputs/windows/MExtend1.2027.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MExtend1/seed2027/validation_selected_CPU.npz",
+    "sha256": "936dfa4083950e1a983c6309697d964145e33506fb94c893872dc77908e32847"
+  },
+  "inputs/windows/MExtend1.2027.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MExtend1.2027/original_test.npz",
+    "sha256": "ba0cf94f81c0ed5ce0793964b6865a1dc59d0ea27ff6c45b5b0bcfd7e136347c"
+  },
+  "inputs/windows/MExtend1.2028.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MExtend1/seed2028/validation_selected_CPU.npz",
+    "sha256": "a47c972f78ba4d64e4de172ce0826a6478cb72fd0a1e253d8d0c07cd2c17cafe"
+  },
+  "inputs/windows/MExtend1.2028.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MExtend1.2028/original_test.npz",
+    "sha256": "488769a79c3cf1c55026d9fcd146c75aa9da377a9cf75b45b008543888f54fad"
+  },
+  "inputs/windows/MExtend2.2026.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MExtend2/seed2026/validation_selected_CPU.npz",
+    "sha256": "308118ae6edb79d1036b519d0b46cfe1fe78a234e30a345d776483f54d4ca59f"
+  },
+  "inputs/windows/MExtend2.2026.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MExtend2.2026/original_test.npz",
+    "sha256": "7a21d297a64003dab79670dc86690935086d1115171fc5c7d58110d24a17e863"
+  },
+  "inputs/windows/MExtend2.2027.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MExtend2/seed2027/validation_selected_CPU.npz",
+    "sha256": "52b74df5196562c3482ee53b6a0ee510770156cb7c7525f40075e8435a0f888b"
+  },
+  "inputs/windows/MExtend2.2027.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MExtend2.2027/original_test.npz",
+    "sha256": "316a22fc1d9210c79daf2520f7ca705547c0b59e3e032c16adcfbf6146745c83"
+  },
+  "inputs/windows/MExtend2.2028.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MExtend2/seed2028/validation_selected_CPU.npz",
+    "sha256": "1f5fbe3d85fb16a5c163d62a55bd4c04d23f43c81d1fffc931e1a21d5fe5cb07"
+  },
+  "inputs/windows/MExtend2.2028.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MExtend2.2028/original_test.npz",
+    "sha256": "0ca741b37cde490a0ec312c6f10d169f03ded647fc04a1142b3d22c79c0da1dd"
+  },
+  "inputs/windows/MStandard.2026.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MStandard/seed2026/validation_selected_CPU.npz",
+    "sha256": "8ff8db467cd127f70e6d55398648ab51b46001bb4ed8b341b92c38004020d787"
+  },
+  "inputs/windows/MStandard.2026.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MStandard.2026/original_test.npz",
+    "sha256": "aeb14afa9ef89286ec3b6574fde5b63e7bddd36c298738a9530a8b6b3776b384"
+  },
+  "inputs/windows/MStandard.2027.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MStandard/seed2027/validation_selected_CPU.npz",
+    "sha256": "96cc963e342e8e9cfea363d634c304b0921427d3ea81ae51edb58cbe5963d21c"
+  },
+  "inputs/windows/MStandard.2027.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MStandard.2027/original_test.npz",
+    "sha256": "267913b31274ad334d02c794ae4560197a1b7bae98be337577d65ee6c4432d49"
+  },
+  "inputs/windows/MStandard.2028.validation.csv": {
+    "source": "VenusExpress/runs/trial_pcw_exp_native_validation_best_refit_20261014/calibration/MStandard/seed2028/validation_selected_CPU.npz",
+    "sha256": "02928bb08e1781f31a2d6c025997ea00035959563982687ea1401f191a6b184a"
+  },
+  "inputs/windows/MStandard.2028.test.csv": {
+    "source": "VenusExpress/runs/pcw_combined_native_validation_best_20261014/test_logits/Exp_nativebest.MStandard.2028/original_test.npz",
+    "sha256": "d17d22afa7ce67c93eb23cac3881d7f90ebd9f9ee48de4907dfe75de5b8718fb"
+  },
+  "reference/working_points.csv": {
+    "source": "VenusExpress/runs/paper_model_refresh_20261015/working_points.csv",
+    "sha256": "f1738e562076faf0f3e6b3e34a808770ce749b9dfd7a1c9c4c6bfa0bc98ab1af"
+  },
+  "inputs/windows/external_test.json": {
+    "source": "VenusExpress/runs/trial_positive_window_gate_20261014/test.npz",
+    "sha256": "d62b4fff97691e7d5f95022c4b5fbc5465a24ba204916047941d49ec05548254"
+  },
+  "reference/matched_points.csv": {
+    "source": "VenusExpress/runs/jiebang_stage_comparison_20261109/verified_matched_points.csv",
+    "sha256": "12fff4732e3f2e9127bd036656e5a7ec74efddfe04bf0633285e5d6dce672b99"
+  },
+  "inputs/holdout/inference_runtime.json": {
+    "source": "VenusExpress/runs/mstandard_year_holdout_2013_20261022/inference_complete.json",
+    "sha256": "f5b6aedc0b10f421117376d8dfd546ba002fb56ec21c6d36351f961c29730089"
+  }
+}
