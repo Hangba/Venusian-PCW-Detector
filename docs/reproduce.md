@@ -15,7 +15,7 @@ jupyter lab workflow.ipynb figures.ipynb
 
 使用安装了项目的 Python 内核。在 `workflow.ipynb` 的参数单元选择数据来源、训练阶段、种子和设备，再开启所需步骤。默认只校验输入并重算参考分数的指标。
 
-在 `figures.ipynb` 中先运行参数与统计准备单元，再运行所需的绘图单元。默认用冻结派生输入重算统计并绘制 10 张图。为 `MAG_DIR` 或 `VENUS_EXPRESS_RAW_DATA_DIR` 指定原始 MAG 目录后，Notebook 可再绘制 3 张原始观测示例图。每组图保存为 PNG 和 PDF，输出在 `build/figures/`。
+在 `figures.ipynb` 中先运行参数与统计准备单元，再运行所需的绘图单元。默认用冻结派生输入重算统计并绘制 9 张图。为 `MAG_DIR` 或 `VENUS_EXPRESS_RAW_DATA_DIR` 指定原始 MAG 目录后，Notebook 可再绘制 3 张原始观测示例图。每组图保存为 PNG 和 PDF，输出在 `build/figures/`。
 
 `venusian-pcw replay` 可单独重算数值，结果写入 `build/summary.json`。
 

@@ -39,7 +39,7 @@ jupyter lab workflow.ipynb figures.ipynb
 ```
 
 - [workflow.ipynb](workflow.ipynb) 用于缓存、事件分析、窗口构建、模型训练、评价和连续搜索。默认只校验输入并重算参考分数的指标。训练、全任务搜索等耗时步骤由参数单元里的开关控制。
-- [figures.ipynb](figures.ipynb) 用于绘图。在参数单元配置数据目录和字体。默认生成 10 张图，接入原始 MAG 后可再绘制 3 张观测示例图。PNG 和 PDF 输出到 `build/figures/`。
+- [figures.ipynb](figures.ipynb) 用于绘图。在参数单元配置数据目录和字体。默认生成 9 张图，接入原始 MAG 后可再绘制 3 张观测示例图。PNG 和 PDF 输出到 `build/figures/`。
 
 ## 常用工作流
 

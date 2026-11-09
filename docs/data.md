@@ -14,7 +14,7 @@ BAM 入口支持两条连续搜索工作流、空间曝光、未平滑谱峰复�
 
 ## IMA
 
-IMA 矩计算入口为 `venusian-pcw ima-moments /path/to/calibrated-bins.npz`，输出 `build/ima_moments.csv`。它使用数据提供者整理后的轴序、地面标定几何因子和有效质荷比映射。原始 CDF 的能表版本、后加速档位和仪器标定由外部数据适配器解析。仓库的 IMA 积分用于公式复算，参考统计表和 13 张图均可独立生成。
+IMA 矩计算入口为 `venusian-pcw ima-moments /path/to/calibrated-bins.npz`，输出 `build/ima_moments.csv`。它使用数据提供者整理后的轴序、地面标定几何因子和有效质荷比映射。原始 CDF 的能表版本、后加速档位和仪器标定由外部数据适配器解析。仓库的 IMA 积分用于公式复算，参考统计表和 12 张图均可独立生成。
 
 | NPZ 字段 | 约定 |
 |---|---|

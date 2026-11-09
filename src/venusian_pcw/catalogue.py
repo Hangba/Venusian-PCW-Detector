@@ -12,7 +12,7 @@ from venus_express.physics.bow_shock import BOW_SHOCK_SOLAR_MINIMUM
 from venus_express.physics.field_connection import event_field_connection
 from venus_express.repro.continuum import background
 from venus_express.repro.raw import cache, raw_root, require_days
-from venus_express.repro.settings import BUILD, INPUTS, sha256, write
+from venus_express.repro.settings import BUILD, INPUTS, display_path, redact_output, sha256, write
 from venus_express.sample_analysis.calculations.band_energy import tangential_band_peak_energy
 from venus_express.sample_analysis.calculations.events import SampleEvent, merge_events, event_table
 from venus_express.sample_analysis.calculations.paper_integrated_density import (
@@ -68,7 +68,7 @@ def prepare_day(day):
     return {
         "day": day,
         "samples": len(features["times_s"]),
-        "cache": str(source._date_cache_path(day)),
+        "cache": display_path(source._date_cache_path(day)),
         "existing_cache": existing,
     }
 
@@ -183,7 +183,7 @@ def measure_group(task):
                 band_energy_status="ok",
             )
         except (ValueError, OSError) as exc:
-            record["band_energy_status"] = f"unavailable: {exc}"
+            record["band_energy_status"] = f"unavailable: {redact_output(str(exc))}"
             continue
         if (
             record["plasma_region"] == "solar_wind"
@@ -193,7 +193,7 @@ def measure_group(task):
             try:
                 record.update(invert(features, context), density_status="ok")
             except ValueError as exc:
-                record["density_status"] = f"unavailable: {exc}"
+                record["density_status"] = f"unavailable: {redact_output(str(exc))}"
     return results
 
 
@@ -237,9 +237,9 @@ def compute(path, days, workers):
         annual_energy_events=len(selected),
         density_events=len(density),
         manual_clusters_10min=len(clusters),
-        source=str(path),
+        source=display_path(path.resolve()),
         event_list_sha256=event_list_sha,
-        mag=str(raw_root()),
+        mag="VENUS_EXPRESS_RAW_DATA_DIR",
     )
     if len(density) >= 3:
         from venus_express.repro.density import fit_with_bootstrap

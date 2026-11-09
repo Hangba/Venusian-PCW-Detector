@@ -3,7 +3,7 @@
 import argparse
 import os
 
-from venus_express.repro.settings import BUILD
+from venus_express.repro.settings import BUILD, display_path
 
 os.environ.setdefault("MPLCONFIGDIR", str(BUILD / "matplotlib"))
 os.environ.setdefault("OMP_NUM_THREADS", "1")
@@ -156,10 +156,10 @@ def main():
         from .window_inputs import materialize
 
         if args.stage == "fixed_test":
-            print(materialize(None, None, args.day))
+            print(display_path(materialize(None, None, args.day)))
         else:
             for role in ["train", "validation"] if args.role == "both" else [args.role]:
-                print(materialize(args.stage, role, args.day))
+                print(display_path(materialize(args.stage, role, args.day)))
     elif args.command == "train":
         from venus_express.repro.training import fit
         from .window_inputs import prepared_path

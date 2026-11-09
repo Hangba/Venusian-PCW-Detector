@@ -11,6 +11,29 @@ BUILD = ROOT / "build"
 FIGURES = BUILD / "figures"
 
 
+
+def display_path(path):
+    """Show repository-relative paths and omit external parent directories."""
+    path = Path(path).expanduser()
+    if not path.is_absolute():
+        return path.as_posix()
+    return path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else path.name
+
+
+def redact_output(text, *external_paths):
+    """Hide the working directory and local input paths in user-facing logs."""
+    replacements = {str(Path.home()): "~", str(ROOT): "."}
+    for name in ("VENUS_EXPRESS_RAW_DATA_DIR", "VENUS_EXPRESS_TRAINING_INPUT_DIR"):
+        if value := os.environ.get(name):
+            replacements[str(Path(value).expanduser().resolve())] = f"<{name}>"
+    for path in external_paths:
+        if isinstance(path, Path) and path.is_absolute():
+            replacements[str(path)] = display_path(path)
+    for path, label in sorted(replacements.items(), key=lambda item: -len(item[0])):
+        text = text.replace(path, label)
+    return text
+
+
 def read(path):
     return json.loads(path.read_text())
 

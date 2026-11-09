@@ -1,6 +1,7 @@
 """Render the reference figures for the Venus Express PCW study."""
 
 from contextlib import contextmanager
+import logging
 
 import matplotlib
 
@@ -163,40 +164,6 @@ def schematic(width, height):
     ax.set(xlim=(0, 1), ylim=(0, 1))
     ax.axis("off")
     return fig, ax
-
-
-def research_flow():
-    fig, ax = schematic(6.45, 2.4)
-    ax.text(0.02, 0.79, "(a)  波动诊断", weight="bold", color=INK)
-    ax.text(0.02, 0.38, "(b)  边界分析", weight="bold", color=INK)
-    for y, titles, details in [
-        (
-            0.62,
-            ["金星快车磁场", "候选搜索", "事件目录", "粒子诊断"],
-            [
-                "1 Hz 矢量观测",
-                "四通道卷积网络",
-                "物理核验与\n短时傅里叶分析",
-                "发生率、波能\n及中性氢密度",
-            ],
-        ),
-        (
-            0.21,
-            ["磁场和离子观测", "穿越筛选", "边界诊断", "时期比较"],
-            [
-                "磁场与离子能谱",
-                "弓激波穿越与\n准径向行星际磁场",
-                "激波形状、压缩比\n及感应磁层边界",
-                "太阳活动与\n行星际磁场",
-            ],
-        ),
-    ]:
-        for i, (title, detail) in enumerate(zip(titles, details)):
-            x = 0.123 + i * 0.249
-            node(ax, x, y, 0.219, 0.24, title, detail, active=i == 3)
-            if i:
-                arrow(ax, (x - 0.139, y), (x - 0.1095, y))
-    save(fig, "01_research_flow")
 
 
 def architecture():
@@ -913,10 +880,35 @@ def rx_examples():
 
 
 @contextmanager
+def quiet_font_messages():
+    """Suppress routine font fallback messages only while exporting figures."""
+    fallback = logging.getLogger("matplotlib.font_manager")
+    font_header = logging.getLogger("fontTools.ttLib.tables._h_e_a_d")
+
+    def keep_font_message(record):
+        return not record.getMessage().startswith("findfont: Failed to find font weight bold, now using ")
+
+    def keep_header_message(record):
+        return record.getMessage() not in {
+            "'created' timestamp seems very low; regarding as unix timestamp",
+            "'modified' timestamp seems very low; regarding as unix timestamp",
+        }
+
+    fallback.addFilter(keep_font_message)
+    font_header.addFilter(keep_header_message)
+    try:
+        yield
+    finally:
+        fallback.removeFilter(keep_font_message)
+        font_header.removeFilter(keep_header_message)
+
+
+@contextmanager
 def figure_style(font_families):
     """Apply the selected fonts and shared plot styling to a notebook cell."""
     OUT.mkdir(parents=True, exist_ok=True)
     with (
+        quiet_font_messages(),
         analysis_figure_style(font_size=9.4),
         matplotlib.rc_context(
             {

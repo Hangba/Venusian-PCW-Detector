@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy.constants import atomic_mass, elementary_charge
 
-from venus_express.repro.settings import BUILD
+from venus_express.repro.settings import BUILD, display_path
 
 
 def integrate(
@@ -71,4 +71,4 @@ def compute(bundle):
     BUILD.mkdir(exist_ok=True)
     output = BUILD / "ima_moments.csv"
     pd.DataFrame(result).to_csv(output, index=False)
-    print(output)
+    print(display_path(output))
