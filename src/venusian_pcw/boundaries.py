@@ -1,7 +1,5 @@
-"""Reconstruct the archived bow-shock plots and tabulate frozen IMF annotations."""
+"""Read the bow-shock measurements and tabulate the IMF annotations."""
 
-import re
-import subprocess
 import numpy as np
 import pandas as pd
 from scipy.stats import ttest_ind_from_stats
@@ -15,67 +13,18 @@ def bow_shock_curve(x0, L, eps, theta=np.linspace(-2.4, 2.4, 600)):
     return x[keep], y[keep]
 
 
-def svg_of(pdf):
-    out = BUILD / "boundary_sources" / pdf.with_suffix(".svg").name
-    out.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["pdftocairo", "-svg", str(pdf), str(out)], check=True, capture_output=True)
-    return out.read_text()
-
-
 def bow_shock_data():
-    s = svg_of(INPUTS / "boundaries/source_compression.pdf")
-    k = (252.595937 - 38.342461) / 4.5
-    bars = {}
-    for p in re.findall(r"<path ([^>]*)>", s):
-        if 'fill="none"' in p and 'stroke="rgb(25%' in p:
-            n = list(map(float, re.findall(r"-?\d+\.?\d*", re.search(r' d="([^"]+)"', p).group(1))))
-            if abs(n[0] - n[2]) < 0.01:
-                bars[round(n[0], 1)] = ((n[1] - 38.342461) / k, (n[3] - 38.342461) / k)
-    order = sorted(bars)  # low 0-45, high 0-45, low 80-100, high 80-100 by x
-    xs = {
-        100.6: ("low", "0—45°"),
-        178.5: ("high", "0—45°"),
-        329.7: ("low", "80—100°"),
-        407.6: ("high", "80—100°"),
+    measurements = pd.read_csv(INPUTS / "boundaries/compression.csv", float_precision="round_trip")
+    compression = {
+        (row.period, row.sza): {"mean": row.mean, "sd": row.sd}
+        for row in measurements.itertuples(index=False)
     }
-    comp = {xs[x]: dict(mean=(lo + hi) / 2, sd=(hi - lo) / 2) for x, (lo, hi) in bars.items()}
-    b = svg_of(INPUTS / "boundaries/source_geometry.pdf")
-    pts = {}
-    for name, col in [
-        ("low", "rgb(17.64679%, 42.352295%, 63.528442%)"),
-        ("high", "rgb(69.802856%, 22.744751%, 22.744751%)"),
-    ]:
-        cs = []
-        for p in re.findall(r"<path ([^>]*)>", b):
-            if f'fill="{col}"' in p:
-                n = list(
-                    map(
-                        float,
-                        re.findall(
-                            r"-?\d+\.?\d*(?:e-?\d+)?", re.search(r' d="([^"]+)"', p).group(1)
-                        ),
-                    )
-                )
-                cs.append(((min(n[0::2]) + max(n[0::2])) / 2, (min(n[1::2]) + max(n[1::2])) / 2))
-        pts[name] = np.array(cs)
-    disks = []
-    for p in re.findall(r"<path ([^>]*)>", b):
-        if 'fill="rgb(10.19' in p:
-            n = list(
-                map(
-                    float,
-                    re.findall(r"-?\d+\.?\d*(?:e-?\d+)?", re.search(r' d="([^"]+)"', p).group(1)),
-                )
-            )
-            if max(n[0::2]) - min(n[0::2]) > 15:
-                disks.append((min(n[0::2]), max(n[0::2]), min(n[1::2]), max(n[1::2])))
-    disks.sort()
-    conv = {}
-    for name, (x0, x1, y0, y1) in zip(["low", "high"], disks[:2]):
-        sx, sy = x1 - x0, y1 - y0
-        P = pts[name]
-        conv[name] = np.c_[(x0 - P[:, 0]) / sx, (y1 - P[:, 1]) / sy]
-    return comp, conv
+    locations = pd.read_csv(INPUTS / "boundaries/shock_positions.csv", float_precision="round_trip")
+    points = {
+        period: group[["X_AVSO_Rv", "R_AVSO_Rv"]].to_numpy()
+        for period, group in locations.groupby("period", sort=False)
+    }
+    return compression, points
 
 
 def compute():

@@ -5,7 +5,7 @@
 - **连续记录检测**：用训练好的模型筛选候选区间，进一步细化事件边界并执行物理核验。
 - **事件目录分析**：用原始磁场和 UTC 事件区间重算波能、轨道位置、弓激波连通性及氢密度。可使用自有清单或仓库附带的 946 个参考事件。
 - **模型输入重建**：从原始磁场生成可复用的日特征缓存，按窗口清单构建训练、验证和测试输入。
-- **研究结果复现**：提供参考检查点、冻结输入和图表生成脚本。
+- **科学图表**：用 [figures.ipynb](figures.ipynb) 分组重算和绘制模型评价、发生率、波能、密度与弓激波图。
 
 ## 安装
 
@@ -31,6 +31,15 @@ venusian-pcw search mission --day 2007-02-04
 
 `cache` 生成日特征缓存。`catalogue` 测量已知事件，可用 `--events /path/to/events.csv` 指定清单。`search` 在连续记录中检出新候选。原始 MAG 数据由用户提供，缓存和结果写入 `build/`。
 
+## 用 Notebook 出图
+
+```bash
+uv pip install -e '.[notebook]'
+jupyter lab figures.ipynb
+```
+
+在 [figures.ipynb](figures.ipynb) 的参数单元设置数据目录和字体，然后按顺序运行。默认生成 10 张图；接入原始 MAG 后还可绘制 3 张观测示例图。PNG 和 PDF 输出到 `build/figures/`。
+
 ## 常用工作流
 
 | 任务 | 命令 |
@@ -39,6 +48,6 @@ venusian-pcw search mission --day 2007-02-04
 | 使用参考检查点搜索全任务期 | `venusian-pcw search mission --workers 6` |
 | 重建训练和验证窗口 | `venusian-pcw prepare-windows MStandard` |
 | 用重建的窗口特征训练 | `venusian-pcw train MStandard --seed 2026 --from-raw` |
-| 使用冻结输入重算参考结果 | `venusian-pcw replay` |
+| 使用冻结输入重算参考统计 | `venusian-pcw replay` |
 
-研究基准、训练划分和图表生成方法见[复现指南](docs/reproduce.md)。绘图和论文编译均支持自选字体，详见[字体配置](docs/reproduce.md#字体配置)。
+分析参数、训练划分和字体设置见[工作流指南](docs/reproduce.md)。

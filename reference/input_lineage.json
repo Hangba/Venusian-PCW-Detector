@@ -131,86 +131,6 @@
     "source": "VenusExpress/runs/h_exospheric_pcw_eventfit_no2pi_phi80_20261104/summary.json",
     "sha256": "8da41f24a3e508baac0af5b0a7f2945f1327c77d6450aaa45b9d08381f58d00e"
   },
-  "paper/fonts/NewCMMath-Book.otf": {
-    "source": "揭榜挂帅/assets/fonts/NewCMMath-Book.otf",
-    "sha256": "ac2f4393db81faa7242751483e52de8fd784c89bd00c20d07aaa938c68441ff8"
-  },
-  "paper/fonts/NewCM10-Bold.otf": {
-    "source": "揭榜挂帅/assets/fonts/NewCM10-Bold.otf",
-    "sha256": "e2edca3824449f16f157777e23ce1addcb6f5c30cc24ef647e6bc38cd402c3aa"
-  },
-  "paper/fonts/NewCM10-BookItalic.otf": {
-    "source": "揭榜挂帅/assets/fonts/NewCM10-BookItalic.otf",
-    "sha256": "015ebc3aaab52eff3c5a35e94e7c57487e6244d4fc22ebba4eee8d479d8b800a"
-  },
-  "paper/fonts/NewCM10-Book.otf": {
-    "source": "揭榜挂帅/assets/fonts/NewCM10-Book.otf",
-    "sha256": "2e3d9e40a23ae028d24c5dce657478fb50bd300ae765467a678b556a90c76903"
-  },
-  "paper/fonts/NewCM10-BoldItalic.otf": {
-    "source": "揭榜挂帅/assets/fonts/NewCM10-BoldItalic.otf",
-    "sha256": "20b5b66cfcea1383106570e5f3285e099735d9c5377a32a636f382e8ece5fcd9"
-  },
-  "paper/literature/references.bib": {
-    "source": "揭榜挂帅/literature/references.bib",
-    "sha256": "bc183639b5f45d7b983170f9e0bda6140d8685c5805ad37d75838d84fe9cc486"
-  },
-  "paper/literature/reference-format.csl": {
-    "source": "揭榜挂帅/literature/reference-format.csl",
-    "sha256": "70c0fbe3b5e63485b823551e7d68747cd85627a770e732af4ec5e3a60bcf8956"
-  },
-  "paper/reference_figures/01_research_flow.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/01_research_flow.pdf",
-    "sha256": "e0eac33aa09cd2a3d63bc6f657d3633c9b1577f9acf76feba22da11162a70516"
-  },
-  "paper/reference_figures/02_model_architecture.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/02_model_architecture.pdf",
-    "sha256": "cbb645e969f65cb45441f32085560fc8eb68535b95dfd0df508eb3883f03d4d4"
-  },
-  "paper/reference_figures/03_model_evaluation.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_axis_style_20261109/03_model_evaluation.pdf",
-    "sha256": "29de520ac6cbc119f03237b5aa3028a8f0c84964f7d5afa9bd5225ef0dcda8df"
-  },
-  "paper/reference_figures/04_pcw_event.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/04_pcw_event.pdf",
-    "sha256": "2a6d3552589a219ec5064f0ebb83d0728e7eb6fabadd77cb05835882799efe9c"
-  },
-  "paper/reference_figures/13_rx_case_orbits.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/13_rx_case_orbits.pdf",
-    "sha256": "8ad581fcfbe72b9e401c2fd62cf7879f6f3730cd539ab26995953af5868bd816"
-  },
-  "paper/reference_figures/05_annual_response.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_axis_style_20261109/05_annual_response.pdf",
-    "sha256": "a334b3af7bb6124ba3b30a20745daccd7348cd0a1be389129a7cca4a23c3cc22"
-  },
-  "paper/reference_figures/11_rx_cluster_occurrence.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/11_rx_cluster_occurrence.pdf",
-    "sha256": "64ec7940f2a1b0cb3c482a75b14ddb1d5f42673b3088ba2d8445e2d42772f27a"
-  },
-  "paper/reference_figures/12_rx_manual_energy.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/12_rx_manual_energy.pdf",
-    "sha256": "3c9f7e81466e6085cfa5f430b73c1fd8082ee43e1a3162830276065c6c46fa93"
-  },
-  "paper/reference_figures/06_h_density.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_rx_20261109/06_h_density.pdf",
-    "sha256": "a185bfee2aaf6e39fecd8c154fe3920ae6cdb818394daf09af9e31253d12c191"
-  },
-  "paper/reference_figures/07_solar_cycle.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/07_solar_cycle.pdf",
-    "sha256": "94825d7cc8ecedaa6bd43eac91777b58c599d08038cfc4d32f7d81067c56cb03"
-  },
-  "paper/reference_figures/08_shock_compression.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_axis_style_20261109/08_shock_compression.pdf",
-    "sha256": "59389cab69927b0f867c2c9cfa18af35de04f2a8c2d65a5797035b5da65058f2"
-  },
-  "paper/reference_figures/09_shock_geometry.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/09_shock_geometry.pdf",
-    "sha256": "226aac3ea63684c0153e801adf387a37bb2fc0371186d2ca264f6e13dabd4fd2"
-  },
-  "paper/reference_figures/10_radial_imf_event.pdf": {
-    "source": "揭榜挂帅/assets/figures/paper_zh_20261109/10_radial_imf_event.pdf",
-    "sha256": "6020fda4d728ae460d57a007a58c3f91a8f2036e56e5cf2914db4309b6ce768a"
-  },
   "inputs/manual/hero_events.csv": {
     "source": "揭榜挂帅/assets/figures/hero_20140222/hero_events.csv",
     "sha256": "ae966a3726422eabd291f9781e592c7de6114585e88073d3ab4db93363d4ec8a"
@@ -234,18 +154,6 @@
   "inputs/model_runtime.csv": {
     "source": "VenusExpress/runs/paper_model_refresh_20261015/training_runtime.csv",
     "sha256": "8aade32ff9ee45dd87f5dfd75223293f769bddf58e3f8d314dabdc4949c1ff71"
-  },
-  "reference/runtime_four_days.md": {
-    "source": "VenusExpress/runs/runtime_current_pipeline_20261016/report.md",
-    "sha256": "63f4adec35f1177af1eb7dd4a62f8e5f25d9741e6bc4830b4030c2c3932d66e4"
-  },
-  "inputs/boundaries/source_compression.pdf": {
-    "source": "揭榜挂帅/assets/figures/sza_field_jump.pdf",
-    "sha256": "aa44e043d01f2904d650013879dd9258d208c6d0775baa2b3db79a3a8b5af581"
-  },
-  "inputs/boundaries/source_geometry.pdf": {
-    "source": "揭榜挂帅/assets/figures/bow_shock.pdf",
-    "sha256": "0cc7df35829e3b3f1871d3959e6fdfdcf0711481c4f04f9ec385ecbd57124ebd"
   },
   "inputs/boundaries/radial_imf.csv": {
     "source": "揭榜挂帅/output/pptx/准径向IMF.xlsx",
@@ -414,5 +322,37 @@
   "inputs/manual/density_bootstrap_days.csv": {
     "source": "VenusExpress/runs/h_exospheric_pcw_eventfit_no2pi_phi80_20261104/exospheric_events.csv",
     "sha256": "228cac58eadc7a7a97430b879a25af2a8f881700011778abdb897d34949fdaa6"
+  },
+  "src/venus_express/assets/fonts/NewCMMath-Book.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCMMath-Book.otf",
+    "sha256": "ac2f4393db81faa7242751483e52de8fd784c89bd00c20d07aaa938c68441ff8"
+  },
+  "src/venus_express/assets/fonts/NewCM10-Bold.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-Bold.otf",
+    "sha256": "e2edca3824449f16f157777e23ce1addcb6f5c30cc24ef647e6bc38cd402c3aa"
+  },
+  "src/venus_express/assets/fonts/NewCM10-BookItalic.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-BookItalic.otf",
+    "sha256": "015ebc3aaab52eff3c5a35e94e7c57487e6244d4fc22ebba4eee8d479d8b800a"
+  },
+  "src/venus_express/assets/fonts/NewCM10-Book.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-Book.otf",
+    "sha256": "2e3d9e40a23ae028d24c5dce657478fb50bd300ae765467a678b556a90c76903"
+  },
+  "src/venus_express/assets/fonts/NewCM10-BoldItalic.otf": {
+    "source": "揭榜挂帅/assets/fonts/NewCM10-BoldItalic.otf",
+    "sha256": "20b5b66cfcea1383106570e5f3285e099735d9c5377a32a636f382e8ece5fcd9"
+  },
+  "inputs/boundaries/compression.csv": {
+    "source": "揭榜挂帅/assets/figures/sza_field_jump.pdf",
+    "source_sha256": "aa44e043d01f2904d650013879dd9258d208c6d0775baa2b3db79a3a8b5af581",
+    "extraction": "Numerical values recovered from archived vector figure",
+    "sha256": "0828e727a28c858231299e40b03bf6d70553008977e56fd0ae2a4ba55f8d8b4a"
+  },
+  "inputs/boundaries/shock_positions.csv": {
+    "source": "揭榜挂帅/assets/figures/bow_shock.pdf",
+    "source_sha256": "0cc7df35829e3b3f1871d3959e6fdfdcf0711481c4f04f9ec385ecbd57124ebd",
+    "extraction": "Numerical values recovered from archived vector figure",
+    "sha256": "f9d8bcaa46c1d8432cd9779ebdbfee9af4a549c8a10672c7ec6768abb04da369"
   }
 }

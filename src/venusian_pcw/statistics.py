@@ -275,6 +275,6 @@ def compute(raw_search=False, raw_density=False, rescore_windows=False, device="
     )
     write(BUILD / "summary.json", result)
     print(
-        f"Paper checks: {int(primary['clusters'])} clusters, {precision['P@50']['PCW']}/50 reviewed PCWs, "
+        f"Reference checks: {int(primary['clusters'])} clusters, {precision['P@50']['PCW']}/50 reviewed PCWs, "
         f"H at 25,000 km = {fit['n25']:.3f} cm^-3, {result['boundary']['imb_identified']}/50 IMB"
     )

@@ -2,55 +2,19 @@
 
 import argparse
 import os
-import subprocess
 
-from venus_express.repro.settings import ROOT, BUILD, FIGURES, read
-
-from .fonts import add_font_arguments, font_paths
+from venus_express.repro.settings import BUILD
 
 os.environ.setdefault("MPLCONFIGDIR", str(BUILD / "matplotlib"))
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 
 
-def compile_paper(generated, families, paths):
-    names = read(ROOT / "reference/paper_snapshot.json")["figures"]
-    if generated:
-        missing = sorted(name for name in names if not (FIGURES / name).is_file())
-        if missing:
-            raise FileNotFoundError(
-                f"Run replay before compiling generated figures: {missing}"
-            )
-    out = BUILD / "paper" / "venus-pickup-ion-paper.pdf"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    command = ["typst", "compile", "--root", str(ROOT)]
-    for path in font_paths(paths):
-        command.extend(["--font-path", str(path)])
-    if families:
-        command.extend(["--input", "font-families=" + "|".join(families)])
-    command.extend(
-        [
-            "--input",
-            f"figures={'generated' if generated else 'reference'}",
-            str(ROOT / "paper/main.typ"),
-            str(out),
-        ]
-    )
-    subprocess.run(command, check=True)
-    print(out)
-
-
 def main():
     parser = argparse.ArgumentParser(prog="venusian-pcw", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("verify", help="Verify checksums of the frozen inputs")
-    paper = sub.add_parser("paper", help="Compile the accompanying Typst manuscript")
-    paper.add_argument("--generated", action="store_true")
-    add_font_arguments(paper)
-    replay = sub.add_parser("replay", help="Recompute the paper's tables and figures")
-    replay.add_argument(
-        "--raw-figures", action="store_true", help="Redraw the three BAM-based figures"
-    )
+    replay = sub.add_parser("replay", help="Recompute numerical benchmarks for the plotting notebook")
     replay.add_argument(
         "--raw-search",
         action="store_true",
@@ -67,7 +31,6 @@ def main():
         help="Score external frozen window features with the selected weights",
     )
     replay.add_argument("--device", choices=["cpu", "mps", "cuda"], default="cpu")
-    add_font_arguments(replay)
     cache = sub.add_parser("cache", help="Build reusable daily MAG features from BAM")
     cache_source = cache.add_mutually_exclusive_group()
     cache_source.add_argument("--events")
@@ -144,14 +107,10 @@ def main():
         from .statistics import verify_inputs
 
         verify_inputs()
-    elif args.command == "paper":
-        compile_paper(args.generated, args.font_family, args.font_path)
     elif args.command == "replay":
         from .statistics import compute
-        from .figures import render
 
         compute(args.raw_search, args.raw_density, args.rescore_windows, args.device)
-        render(args.raw_figures or args.raw_search, args.font_family, args.font_path)
     elif args.command == "cache":
         from .catalogue import precompute
         from venus_express.repro.settings import INPUTS

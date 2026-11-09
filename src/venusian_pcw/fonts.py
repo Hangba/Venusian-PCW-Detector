@@ -1,4 +1,4 @@
-"""Font selection shared by the plotting and manuscript commands."""
+"""Font selection for the figure notebook."""
 
 from functools import lru_cache
 import os
@@ -6,7 +6,7 @@ from pathlib import Path
 
 from venus_express.repro.settings import ROOT
 
-BUNDLED_FONTS = ROOT / "paper" / "fonts"
+BUNDLED_FONTS = ROOT / "src" / "venus_express" / "assets" / "fonts"
 CJK_FALLBACKS = (
     "Source Han Serif SC",
     "Noto Serif CJK SC",
@@ -16,23 +16,6 @@ CJK_FALLBACKS = (
     "Microsoft YaHei",
     "WenQuanYi Zen Hei",
 )
-
-
-def add_font_arguments(parser):
-    parser.add_argument(
-        "--font-family",
-        action="append",
-        default=[],
-        metavar="FAMILY",
-        help="Preferred font family. Repeat in fallback order.",
-    )
-    parser.add_argument(
-        "--font-path",
-        action="append",
-        default=[],
-        metavar="DIRECTORY",
-        help="Add a directory of fonts. May be repeated.",
-    )
 
 
 def font_paths(paths):

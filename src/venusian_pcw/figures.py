@@ -1,5 +1,7 @@
 """Render the reference figures for the Venus Express PCW study."""
 
+from contextlib import contextmanager
+
 import matplotlib
 
 matplotlib.use("Agg")
@@ -28,10 +30,10 @@ from venus_express.sample_analysis.plots.rx_common import (
     prepare_rx_coordinates,
 )
 
-from venus_express.repro.settings import ROOT, INPUTS, BUILD, FIGURES as OUT
+from venus_express.repro.settings import INPUTS, BUILD, FIGURES as OUT
 from .boundaries import bow_shock_data, bow_shock_curve
 from .mag import load_day, fac
-from .fonts import mixed_text_family, plot_families
+from .fonts import mixed_text_family
 
 INK, GRAY, BLUE = "#20252b", "#67717c", "#1f5f8b"
 GREEN, RED, GOLD = "#347758", "#9e4e48", "#9a6c2c"
@@ -910,17 +912,15 @@ def rx_examples():
     save(fig, "13_rx_case_orbits")
 
 
-def render(raw, families=(), paths=()):
-    """Rebuild the current plots, using the fixed originals for BAM panels when requested."""
-    import shutil
-
+@contextmanager
+def figure_style(font_families):
+    """Apply the selected fonts and shared plot styling to a notebook cell."""
     OUT.mkdir(parents=True, exist_ok=True)
-    fonts = plot_families(families, paths)
     with (
         analysis_figure_style(font_size=9.4),
         matplotlib.rc_context(
             {
-                "font.family": fonts,
+                "font.family": font_families,
                 "axes.labelsize": 9.4,
                 "xtick.labelsize": 8.8,
                 "ytick.labelsize": 8.8,
@@ -929,20 +929,4 @@ def render(raw, families=(), paths=()):
             }
         ),
     ):
-        for draw in (
-            research_flow,
-            architecture,
-            model_results,
-            annual_response,
-            density,
-            solar_cycle,
-            shock_figures,
-            spatial_maps,
-        ):
-            draw()
-        if raw:
-            for draw in (wave_event, radial_event, rx_examples):
-                draw()
-        else:
-            for file in ("04_pcw_event.pdf", "10_radial_imf_event.pdf", "13_rx_case_orbits.pdf"):
-                shutil.copyfile(ROOT / "paper/reference_figures" / file, OUT / file)
+        yield
