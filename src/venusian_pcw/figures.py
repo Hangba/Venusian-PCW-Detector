@@ -9,6 +9,7 @@ matplotlib.use("Agg")
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+from matplotlib.lines import Line2D
 from matplotlib.path import Path as MarkerPath
 from matplotlib import patheffects
 from matplotlib.text import Text
@@ -29,7 +30,10 @@ from venus_express.sample_analysis.plots.rx_common import (
 )
 
 from venus_express.repro.settings import INPUTS, BUILD, FIGURES as OUT
-from .boundaries import BOW_SHOCK_MODELS, bow_shock_curve
+from .boundaries import (
+    BOW_SHOCK_MODELS, bow_shock_curve, fit_shock_models, measure_shock_positions,
+    positions_by_period, read_shock_positions,
+)
 from .mag import load_day, fac
 from .fonts import mixed_text_family
 
@@ -337,16 +341,62 @@ def solar_cycle():
     save(fig, "07_solar_cycle")
 
 
-def shock_models():
-    fig, ax = plt.subplots(figsize=(5.6, 3.2), layout="constrained")
-    ax.add_patch(Circle((0, 0), 1, color=LIGHT, alpha=0.36, lw=0))
-    for (label, params), color, style in zip(BOW_SHOCK_MODELS.items(), (GRAY, BLUE), ("--", "-")):
-        ax.plot(*bow_shock_curve(*params), color=color, ls=style, lw=1.2, label=label)
-    ax.set(xlim=(2.05, -3.1), ylim=(0, 4), aspect="equal",
-           xlabel=r"$X_{\rm AVSO}/R_V$", ylabel=r"$R_{\rm AVSO}/R_V$")
-    axes_style(ax, False)
-    ax.legend()
-    save(fig, "09_shock_geometry")
+def shock_models(positions_path=None, crossings_path=None):
+    if positions_path is not None and crossings_path is not None:
+        raise ValueError("Select either a position list or a UTC crossing list")
+    if crossings_path is None:
+        points = read_shock_positions(positions_path)
+        models = BOW_SHOCK_MODELS
+    else:
+        table = measure_shock_positions(crossings_path)
+        points = positions_by_period(table)
+        models = fit_shock_models(points)
+        output = BUILD / "boundaries"
+        output.mkdir(parents=True, exist_ok=True)
+        table.to_csv(output / "shock_positions.csv", index=False)
+        pd.DataFrame.from_dict(
+            models, orient="index", columns=["x0_Rv", "L_Rv", "eccentricity"]
+        ).rename(index={"低活动期": "low", "高活动期": "high"}).to_csv(
+            output / "shock_fit.csv", index_label="period"
+        )
+    labels = {"low": "低活动期", "high": "高活动期"}
+    colors = {"low": GRAY, "high": BLUE}
+    styles = {"low": "--", "high": "-"}
+    fig, axes = plt.subplots(1, 3, figsize=(6.45, 2.55), sharey=True, layout="constrained")
+    for ax, period, letter in zip(axes, ("low", "high", "both"), "abc"):
+        ax.add_patch(Circle((0, 0), 1, color=LIGHT, alpha=0.36, lw=0, zorder=0))
+        if period in points:
+            x, r = points[period].T
+            ax.scatter(x, r, s=3.6, c=colors[period], alpha=0.36, lw=0)
+        for category in labels if period == "both" else (period,):
+            ax.plot(
+                *bow_shock_curve(*models[labels[category]]),
+                color=colors[category],
+                ls=styles[category],
+                lw=1.15,
+            )
+        ax.set(
+            xlim=(2.05, -3.1),
+            ylim=(0, 4.0),
+            xticks=[2, 0, -2],
+            xlabel=r"$X_{\rm AVSO}/R_V$",
+            title=labels.get(period, "拟合曲线对比"),
+            aspect="equal",
+        )
+        ax.title.set_fontsize(9)
+        axes_style(ax, False)
+        panel(ax, letter)
+    axes[0].set_ylabel(r"$\sqrt{Y^2+Z^2}/R_V$")
+    axes[-1].legend(
+        handles=[
+            Line2D([0], [0], color=colors[k], ls=styles[k], label=label)
+            for k, label in labels.items()
+        ],
+        loc="lower right",
+        fontsize=8,
+    )
+    name = "09_shock_geometry" if crossings_path is None else "09_shock_geometry_from_bam"
+    save(fig, name)
 
 
 def radial_event():

@@ -51,6 +51,6 @@ jupyter lab workflow.ipynb figures.ipynb
 | 用重建的窗口特征训练 | `venusian-pcw train MStandard --seed 2026 --from-raw` |
 | 汇总本地生成的搜索与曝光结果 | `venusian-pcw replay` |
 
-仓库随附权重、事件与窗口清单、SILSO 黑子观测和模型参数。MAG 由使用者提供。特征、分数、曝光和事件测量从原始记录生成。
+仓库随附权重、事件与窗口清单、SILSO 黑子观测、弓激波位置清单和模型参数。MAG 由使用者提供。特征、分数、曝光和事件测量从原始记录生成。
 
 分析参数、训练划分和字体设置见[工作流指南](docs/reproduce.md)。
