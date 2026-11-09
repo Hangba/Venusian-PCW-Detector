@@ -40,6 +40,6 @@ venusian-pcw evaluate-windows
 
 ## 出图
 
-在 `figures.ipynb` 中配置数据目录并运行。事件分布和密度图使用本次逐事件测量。年际波能面板需要足够的逐年样本。开启 `RUN_MISSION_SEARCH` 后会从 BAM 计算候选、曝光和发生率，再生成相应图表。太阳黑子和弓激波位置图可单独运行。弓激波图按低、高活动期分别绘制穿越点和参考模型曲线，第三个面板对比两条曲线。可设置 `SHOCK_POSITIONS_CSV` 使用论文位置清单，或设置 `SHOCK_CROSSINGS_CSV` 从 UTC 穿越时刻和 BAM 提取位置并重新拟合。两项只选一种。从 BAM 重算的图保存为 `09_shock_geometry_from_bam`，便于与论文版并排查看。详细字段见[数据接口](data.md#弓激波三联图输入)。
+在 `figures.ipynb` 中配置数据目录并运行。事件分布和密度图使用本次逐事件测量。年际波能面板需要足够的逐年样本。开启 `RUN_MISSION_SEARCH` 后会从 BAM 计算候选、曝光和发生率，再生成相应图表。太阳黑子和弓激波位置图可单独运行。弓激波图按低、高活动期分别绘制穿越点和参考模型曲线，第三个面板对比两条曲线。可设置 `SHOCK_POSITIONS_CSV` 使用论文位置清单，或设置 `SHOCK_CROSSINGS_CSV` 从 UTC 穿越时刻和 BAM 提取位置并重新拟合。两项只选一种。使用位置清单时，可开启 `SHOCK_REFIT_POSITIONS` 直接从散点重拟合，图件另存为 `09_shock_geometry_refit`，参数写入 `build/boundaries/shock_fit_from_positions.csv`。从 BAM 重算的图保存为 `09_shock_geometry_from_bam`，便于与论文版并排查看。详细字段见[数据接口](data.md#弓激波三联图输入)。
 
 PNG 和 PDF 写入 `build/figures/`。字体通过参数单元的 `FONT_FAMILIES` 和 `FONT_PATHS` 设置，也可用 `VENUSIAN_PCW_FONT_PATH` 添加字体目录。中文标签需要包含相应字形的字体。

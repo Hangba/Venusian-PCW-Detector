@@ -341,23 +341,33 @@ def solar_cycle():
     save(fig, "07_solar_cycle")
 
 
-def shock_models(positions_path=None, crossings_path=None):
+def shock_models(positions_path=None, crossings_path=None, *, refit_positions=False):
     if positions_path is not None and crossings_path is not None:
         raise ValueError("Select either a position list or a UTC crossing list")
+    name = "09_shock_geometry"
+    fit_filename = None
     if crossings_path is None:
         points = read_shock_positions(positions_path)
-        models = BOW_SHOCK_MODELS
+        if refit_positions:
+            name += "_refit"
+            fit_filename = "shock_fit_from_positions.csv"
     else:
         table = measure_shock_positions(crossings_path)
         points = positions_by_period(table)
+        name += "_from_bam"
+        fit_filename = "shock_fit.csv"
+
+    models = BOW_SHOCK_MODELS
+    if fit_filename is not None:
         models = fit_shock_models(points)
         output = BUILD / "boundaries"
         output.mkdir(parents=True, exist_ok=True)
-        table.to_csv(output / "shock_positions.csv", index=False)
+        if crossings_path is not None:
+            table.to_csv(output / "shock_positions.csv", index=False)
         pd.DataFrame.from_dict(
             models, orient="index", columns=["x0_Rv", "L_Rv", "eccentricity"]
         ).rename(index={"低活动期": "low", "高活动期": "high"}).to_csv(
-            output / "shock_fit.csv", index_label="period"
+            output / fit_filename, index_label="period"
         )
     labels = {"low": "低活动期", "high": "高活动期"}
     colors = {"low": GRAY, "high": BLUE}
@@ -395,7 +405,6 @@ def shock_models(positions_path=None, crossings_path=None):
         loc="lower right",
         fontsize=8,
     )
-    name = "09_shock_geometry" if crossings_path is None else "09_shock_geometry_from_bam"
     save(fig, name)
 
 

@@ -38,7 +38,7 @@ IMA 矩计算入口为 `venusian-pcw ima-moments /path/to/calibrated-bins.npz`�
 
 | 输入 | 必需字段 | 用途 |
 |---|---|---|
-| `SHOCK_POSITIONS_CSV` | `X_AVSO_Rv,R_AVSO_Rv,period` | 用已有 AVSO 位置和随附模型参数复绘 |
+| `SHOCK_POSITIONS_CSV` | `X_AVSO_Rv,R_AVSO_Rv,period` | 用已有 AVSO 位置和随附模型参数复绘，或开启 `SHOCK_REFIT_POSITIONS` 从散点重拟合 |
 | `SHOCK_CROSSINGS_CSV` | `utc,period` | 从原始 BAM 量取穿越位置并拟合两组圆锥曲线 |
 
 两种清单的 `period` 都用 `low` 或 `high`。两项都留空时使用仓库附带的位置清单。UTC 入口为每个穿越时刻匹配 2 秒内最近的有效 MAG 位置，转换到 AVSO 后分别对两期拟合圆锥隐式方程残差，输出位置与模型参数到 `build/boundaries/`。从 UTC 重算论文散点需要原始穿越时刻清单；随附的 980 个位置来自原矢量图，未附这些时刻。
