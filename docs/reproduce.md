@@ -1,5 +1,7 @@
 # 分析与出图工作流
 
+[workflow.ipynb](../workflow.ipynb) 是数据处理、训练、评价和搜索的交互入口。
+
 [figures.ipynb](../figures.ipynb) 是科学图表入口。它调用项目的 Python 模块，按检测、年际与空间统计、密度、边界和观测示例分组出图。
 
 ## 运行 Notebook
@@ -8,10 +10,12 @@
 
 ```bash
 uv pip install -e '.[notebook]'
-jupyter lab figures.ipynb
+jupyter lab workflow.ipynb figures.ipynb
 ```
 
-使用安装了项目的 Python 内核。先运行参数与统计准备单元，再运行需要的绘图单元。默认用冻结派生输入重算统计并绘制 10 张图。为 `MAG_DIR` 或 `VENUS_EXPRESS_RAW_DATA_DIR` 指定原始 MAG 目录后，Notebook 可再绘制 3 张原始观测示例图。每组图保存为 PNG 和 PDF，输出在 `build/figures/`。
+使用安装了项目的 Python 内核。在 `workflow.ipynb` 的参数单元选择数据来源、训练阶段、种子和设备，再开启所需步骤。默认只校验输入并重算参考分数的指标。
+
+在 `figures.ipynb` 中先运行参数与统计准备单元，再运行所需的绘图单元。默认用冻结派生输入重算统计并绘制 10 张图。为 `MAG_DIR` 或 `VENUS_EXPRESS_RAW_DATA_DIR` 指定原始 MAG 目录后，Notebook 可再绘制 3 张原始观测示例图。每组图保存为 PNG 和 PDF，输出在 `build/figures/`。
 
 `venusian-pcw replay` 可单独重算数值，结果写入 `build/summary.json`。
 
@@ -39,6 +43,10 @@ venusian-pcw exposure --workers 6
 完成两条搜索后，可在 Notebook 中将 `USE_NEW_SEARCH` 设为 `True` 来使用新搜索的结果。将 `RECOMPUTE_DENSITY_PSD` 设为 `True` 可重新测量密度反演所用的波谱。弓激波图使用从归档矢量图恢复的数值表，留出复审和准径向行星际磁场样本使用提供的人工标注。[输入定义](data.md)
 
 ## 模型训练与固定窗口评价
+
+在 `workflow.ipynb` 中，设置 `STAGE` 和 `TRAIN_SEEDS`。从 BAM 开始时，先开启 `PREPARE_TRAINING_WINDOWS`，再开启 `RUN_TRAIN`。需要对本地训练结果做固定窗口评价时，设置 `EVAL_TRAINED_SEED`，并提前准备与 `TRAIN_INPUT` 对应的固定测试特征。参考检查点评价与本地检查点评价分别输出。
+
+也可通过命令行批量运行：
 
 ```bash
 venusian-pcw prepare-windows MStandard

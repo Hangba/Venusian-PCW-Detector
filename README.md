@@ -31,14 +31,15 @@ venusian-pcw search mission --day 2007-02-04
 
 `cache` 生成日特征缓存。`catalogue` 测量已知事件，可用 `--events /path/to/events.csv` 指定清单。`search` 在连续记录中检出新候选。原始 MAG 数据由用户提供，缓存和结果写入 `build/`。
 
-## 用 Notebook 出图
+## 用 Notebook 运行工作流
 
 ```bash
 uv pip install -e '.[notebook]'
-jupyter lab figures.ipynb
+jupyter lab workflow.ipynb figures.ipynb
 ```
 
-在 [figures.ipynb](figures.ipynb) 的参数单元设置数据目录和字体，然后按顺序运行。默认生成 10 张图；接入原始 MAG 后还可绘制 3 张观测示例图。PNG 和 PDF 输出到 `build/figures/`。
+- [workflow.ipynb](workflow.ipynb) 用于缓存、事件分析、窗口构建、模型训练、评价和连续搜索。默认只校验输入并重算参考分数的指标。训练、全任务搜索等耗时步骤由参数单元里的开关控制。
+- [figures.ipynb](figures.ipynb) 用于绘图。在参数单元配置数据目录和字体。默认生成 10 张图，接入原始 MAG 后可再绘制 3 张观测示例图。PNG 和 PDF 输出到 `build/figures/`。
 
 ## 常用工作流
 
