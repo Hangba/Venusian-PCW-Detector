@@ -1,10 +1,10 @@
-# Reproduce the Venus Express PCW study
+# 金星快车 PCW 研究复现指南
 
-The reference workflow accompanies the Chinese-language manuscript in [paper/main.typ](../paper/main.typ). It uses four model stages with three seeds each and a separate 2013 holdout checkpoint.
+这套工作流对应[中文论文](../paper/main.typ)。参考模型包含四个训练阶段，每阶段三个随机种子。2013 年留出评价使用单独的检查点。
 
-## Replay the reference results
+## 使用冻结输入复算
 
-Figure generation uses Poppler's `pdftocairo`. Manuscript compilation uses Typst 0.14 or later. Use a font with Chinese glyph coverage when rendering the reference figures or manuscript.
+出图需要 Poppler 的 `pdftocairo`，论文编译需要 Typst 0.14 或更高版本。渲染中文图表或正文时，请使用包含中文字形的字体。
 
 ```bash
 venusian-pcw verify
@@ -12,19 +12,19 @@ venusian-pcw replay
 venusian-pcw paper --generated
 ```
 
-Replay regenerates the tables and ten figures from frozen inputs and uses the reference copies of three figures that need raw MAG. Set `VENUS_EXPRESS_RAW_DATA_DIR` and pass `replay --raw-figures` to regenerate all 13. The `paper` command without `--generated` uses the archived figures.
+`replay` 用冻结输入重算表格并重绘 10 张图，其余 3 张依赖原始 MAG 的图采用归档版本。接入 `VENUS_EXPRESS_RAW_DATA_DIR` 后，运行 `replay --raw-figures` 可重绘全部 13 张图。直接运行 `paper` 会使用归档图件编译。
 
-| Reference result | Value |
+| 参考结果 | 数值 |
 |---|---|
-| 2013 holdout review | 245 final candidates, 38 PCWs among the top 50 reviewed |
-| Mission occurrence | 1,150 clusters at threshold 0.70, 0.42468 clusters per observed day |
-| Distance-adjusted wave energy | 796 events, Pearson r = 0.695 with annual sunspot number |
-| Dayside neutral hydrogen | 78 events, 6.55 cm⁻³ at 25,000 km, 95% interval 4.99–8.72 cm⁻³ |
-| Near-radial IMF sample | An induced magnetosphere boundary identified in 32 of 50 intervals |
+| 2013 年留出复审 | 245 个最终候选，排名前 50 项中确认 38 个 PCW |
+| 全任务期发生率 | 阈值 0.70 下得到 1,150 个事件簇，平均 0.42468 簇/观测日 |
+| 距离校正后的年际波能 | 796 个事件，与年均太阳黑子数的 Pearson 相关系数为 0.695 |
+| 日侧中性氢密度 | 78 个事件，25,000 km 处为 6.55 cm⁻³，95% 区间为 4.99–8.72 cm⁻³ |
+| 准径向行星际磁场样本 | 50 个时段中有 32 个识别出感应磁层边界 |
 
-Numerical outputs are in `build/summary.json`, with the compiled manuscript at `build/paper/venus-pickup-ion-paper.pdf`.
+数值结果写入 `build/summary.json`，编译后的论文写入 `build/paper/venus-pickup-ion-paper.pdf`。
 
-## From raw MAG
+## 从原始 MAG 重算
 
 ```bash
 export VENUS_EXPRESS_RAW_DATA_DIR=/path/to/VEX_1Hz
@@ -37,11 +37,11 @@ venusian-pcw replay --raw-search --raw-density
 venusian-pcw paper --generated
 ```
 
-`catalogue` independently measures the 946 annotated PCW events and writes the results under `build/raw_catalogue/`. The mission search builds a separate automatically detected catalogue. Search supports `--day YYYY-MM-DD` for diagnostics and `--resume` to reuse completed daily coarse scores.
+`catalogue` 从原始记录重新测量参考清单中的 946 个 PCW 事件，结果写入 `build/raw_catalogue/`。全任务期搜索生成独立的自动检出目录。搜索支持用 `--day YYYY-MM-DD` 指定单日，也支持用 `--resume` 复用同一次运行已完成的逐日粗分数。
 
-The bow-shock geometry benchmark uses crossing positions recovered from the reference vector figures and the reported conic parameters. The holdout and near-radial IMF reviews use the supplied human annotations. See the [input definitions](data.md) for details.
+弓激波几何基准使用从原矢量图恢复的穿越点及已报告的圆锥曲线参数。留出复审和准径向行星际磁场样本使用提供的人工标注。[输入定义](data.md)
 
-## Training and fixed-window evaluation
+## 模型训练与固定窗口评价
 
 ```bash
 venusian-pcw prepare-windows MStandard
@@ -54,15 +54,15 @@ venusian-pcw prepare-windows fixed_test
 venusian-pcw evaluate-windows
 ```
 
-Train any of MSeed, MExtend1, MExtend2, or MStandard with seed 2026, 2027, or 2028. The separate `holdout2013` stage uses seed 2026. For exact comparisons with the original features, point `VENUS_EXPRESS_TRAINING_INPUT_DIR` to the frozen NPZ root listed in the [input protocol](../inputs/protocol.json). Use `replay --rescore-windows` to run the original features through the reference checkpoints.
+MSeed、MExtend1、MExtend2 和 MStandard 支持种子 2026、2027、2028。`holdout2013` 使用种子 2026。若要与原始窗口特征做精确对照，可将 `VENUS_EXPRESS_TRAINING_INPUT_DIR` 指向[输入协议](../inputs/protocol.json)所列的冻结 NPZ 根目录，再运行 `replay --rescore-windows`。
 
-## Fonts
+## 字体配置
 
-Both `replay` and `paper` accept repeatable `--font-family` and `--font-path` flags. List preferred installed families in fallback order or provide one or more directories of font files. The bundled New Computer Modern fonts and available system fonts supply defaults. The preferred families can differ between figures and manuscript text.
+`replay` 和 `paper` 都支持重复传入 `--font-family` 和 `--font-path`。可按回退顺序指定字体家族，也可添加一个或多个字体目录。默认使用随仓库提供的 New Computer Modern 和可用系统字体。图表与正文可以分别选字体。
 
 ```bash
 venusian-pcw replay --font-family "DejaVu Sans" --font-family "Noto Sans CJK SC"
 venusian-pcw paper --generated --font-path /path/to/fonts --font-family "Noto Serif CJK SC"
 ```
 
-`VENUSIAN_PCW_FONT_PATH` adds font directories for both commands, separated by the platform's path separator. Font settings apply when a figure is rendered. Text embedded in an archived PDF retains that PDF's fonts.
+也可用 `VENUSIAN_PCW_FONT_PATH` 为两个命令添加字体目录。多个目录用系统路径分隔符分开。字体配置在图件重绘时生效，归档 PDF 中的文字随原 PDF 字体显示。

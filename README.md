@@ -1,15 +1,15 @@
 # Venusian PCW Detector
 
-Detect proton cyclotron waves (PCWs) in Venus Express magnetometer observations and analyze their occurrence, wave energy, and relationship to the Venusian plasma environment.
+用于在金星快车（Venus Express）的磁强计观测中检测质子回旋波（PCW），并分析事件的发生率、波能及其与金星等离子体环境的关系。
 
-- **Search continuous MAG records** with a trained detector, event-boundary refinement, and physical screening.
-- **Analyze an event catalogue** using your own UTC intervals or the included 946-event reference list.
-- **Rebuild model inputs** from raw observations and fixed window lists for training or evaluation.
-- **Reproduce the reference study** with frozen inputs, model checkpoints, and figure scripts.
+- **连续记录检测**：用训练好的模型筛选候选区间，进一步细化事件边界并执行物理核验。
+- **事件目录分析**：用原始磁场和 UTC 事件区间重算波能、轨道位置、弓激波连通性及氢密度。可使用自有清单或仓库附带的 946 个参考事件。
+- **模型输入重建**：从原始磁场生成可复用的日特征缓存，按窗口清单构建训练、验证和测试输入。
+- **研究结果复现**：提供参考检查点、冻结输入和图表生成脚本。
 
-## Install
+## 安装
 
-Use Python 3.12 for the pinned environment. Install from a checkout so that the command can find the study inputs and checkpoints.
+推荐使用 Python 3.12 安装锁定版本的依赖。在仓库检出目录内执行以下命令，命令行工具会从该目录读取模型和参考输入。
 
 ```bash
 uv venv --python 3.12
@@ -18,9 +18,9 @@ source .venv/bin/activate
 venusian-pcw --help
 ```
 
-## Start with a day of data
+## 从单日数据开始
 
-Set the path to a directory of calibrated 1 Hz VSO BAM files. See the [data formats and sources](docs/data.md) for the MAG layout and the event CSV schema.
+将环境变量指向存放校准后 1 Hz VSO BAM 文件的目录。磁场文件格式、下载来源和事件 CSV 的字段见[数据接口与来源](docs/data.md)。
 
 ```bash
 export VENUS_EXPRESS_RAW_DATA_DIR=/path/to/VEX_1Hz
@@ -29,16 +29,16 @@ venusian-pcw catalogue --day 2006-04-24
 venusian-pcw search mission --day 2007-02-04
 ```
 
-`cache` builds reusable daily magnetic and polarization features. `catalogue` measures the listed events and accepts `--events /path/to/events.csv`. `search` detects new candidates in continuous records. Caches and results are written to `build/`. Supply MAG data separately.
+`cache` 生成日特征缓存。`catalogue` 测量已知事件，可用 `--events /path/to/events.csv` 指定清单。`search` 在连续记录中检出新候选。原始 MAG 数据由用户提供，缓存和结果写入 `build/`。
 
-## Workflows
+## 常用工作流
 
-| Task | Command |
+| 任务 | 命令 |
 |---|---|
-| Analyze all events in a catalogue | `venusian-pcw catalogue --events events.csv --workers 4` |
-| Search the mission with the reference checkpoint | `venusian-pcw search mission --workers 6` |
-| Rebuild training and validation windows | `venusian-pcw prepare-windows MStandard` |
-| Train on locally rebuilt features | `venusian-pcw train MStandard --seed 2026 --from-raw` |
-| Replay the study from frozen inputs | `venusian-pcw replay` |
+| 分析整份事件清单 | `venusian-pcw catalogue --events events.csv --workers 4` |
+| 使用参考检查点搜索全任务期 | `venusian-pcw search mission --workers 6` |
+| 重建训练和验证窗口 | `venusian-pcw prepare-windows MStandard` |
+| 用重建的窗口特征训练 | `venusian-pcw train MStandard --seed 2026 --from-raw` |
+| 使用冻结输入重算参考结果 | `venusian-pcw replay` |
 
-The [reproduction guide](docs/reproduce.md) covers the study benchmarks, model splits, and figure generation, including [font selection](docs/reproduce.md#fonts).
+研究基准、训练划分和图表生成方法见[复现指南](docs/reproduce.md)。绘图和论文编译均支持自选字体，详见[字体配置](docs/reproduce.md#字体配置)。
