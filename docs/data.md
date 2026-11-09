@@ -20,7 +20,7 @@ IMA 矩计算入口为 `venusian-pcw ima-moments /path/to/calibrated-bins.npz`�
 |---|---|
 | `utc` | 各扫描的 UTC 字符串 |
 | `counts` | `(scan, ring, sector, energy, pitch)`，无效或填充档置 NaN |
-| `geometric_factor` | 可广播至 counts，满足 `counts/(G × E × 0.1209 s)` 输出每 cm²、每 s、每 sr、每 eV 的差分通量 |
+| `geometric_factor` | 可广播至 counts，满足 `counts/(G·E·0.1209 s)` 输出每 cm²、每 s、每 sr、每 eV 的差分通量 |
 | `mass_to_charge` | 各档位的质量环等效质荷比，可广播至 counts，无效映射置 NaN |
 | `energy_eV`、`width_eV` | 一维共同能量网格中心及能宽 |
 | `solid_angle_sr`、`unit_vector` | `(sector,pitch)` 立体角和 `(sector,pitch,3)` IMAS 单位视向 |
